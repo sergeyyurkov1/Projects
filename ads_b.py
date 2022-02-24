@@ -23,28 +23,31 @@ def get_states(bounds: list) -> list:
 
     features = []
 
-    for i in states:
-        features.append({
-            "lon": i[5],
-            "lat":  i[6],
-            "true_track": i[10],
-            "icao24": i[0],
-            "callsign": i[1][:-2],
-            "origin_country": i[2],
-            "time_position": i[3],
-            "last_contact": i[4],
-            "baro_altitude": i[7],
-            "on_ground": i[8],
-            "velocity": i[9],
-            "vertical_rate": i[11],
-            "sensors": i[12],
-            "geo_altitude": i[13],
-            "squawk": i[14],
-            "spi": i[15],
-            "position_source": i[16],
-        })
+    try:
+        for i in states:
+            features.append({
+                "lon": i[5],
+                "lat":  i[6],
+                "true_track": i[10],
+                "icao24": i[0],
+                "callsign": i[1][:-2],
+                "origin_country": i[2],
+                "time_position": i[3],
+                "last_contact": i[4],
+                "baro_altitude": i[7],
+                "on_ground": i[8],
+                "velocity": i[9],
+                "vertical_rate": i[11],
+                "sensors": i[12],
+                "geo_altitude": i[13],
+                "squawk": i[14],
+                "spi": i[15],
+                "position_source": i[16],
+            })
+    except:
+        pass
 
-    return features
+    return features[:300]
 
 def get_flight_status(callsign: str) -> dict:
     from datetime import date
@@ -79,7 +82,7 @@ def get_image_url(aircraft_model: str) -> str:
 point_to_layer = assign("""
     function(feature, latlng, context) {
         var marker_ = L.icon({
-            iconUrl: "https://dash-leaflet.herokuapp.com/assets/icon_plane.png",
+            iconUrl: "assets/airplane-4-32.png",
         });
         var true_track = feature.properties.true_track;
         return L.marker(latlng, { icon: marker_, rotationAngle: true_track });
@@ -104,13 +107,17 @@ cluster_to_layer = assign("""
 
 
 app = Dash(
-    external_stylesheets=[dbc.themes.BOOTSTRAP],
+    external_stylesheets=["https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css", dbc.themes.BOOTSTRAP],
+    prevent_initial_callbacks=True,
     meta_tags=[{'name': 'viewport',
         'content': 'width=device-width, initial-scale=1.0, maximum-scale=1.2, minimum-scale=0.6'
     }]
 )
 
 PLOTLY_LOGO = "https://openskynetwork.github.io/opensky-api/_static/radar_small.png"
+
+url = 'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png'
+attribution = '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>'
 
 app.layout = html.Div(
     [
@@ -136,7 +143,8 @@ app.layout = html.Div(
         ),
         dl.Map(
             children=[
-                dl.TileLayer(),
+                dl.LocateControl(options={'locateOptions': {'enableHighAccuracy': True}}),
+                dl.TileLayer(url=url, maxZoom=20, attribution=attribution),
                 dl.GeoJSON(id="data",
                     options=dict(pointToLayer=point_to_layer),
                     cluster=True,
@@ -145,6 +153,7 @@ app.layout = html.Div(
                     # children=[dl.Tooltip(id="tooltip")]
                 ),
             ],
+            preferCanvas=True,
             style={"width": "100%", "height": "100vh"},
             id="map",
         ), # 100vw, 100vh, 500px
