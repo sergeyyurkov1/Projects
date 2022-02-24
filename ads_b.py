@@ -5,13 +5,10 @@ from dash import html, Input, Output, Dash, dcc
 import requests
 from pprint import pprint
 from dash_extensions.javascript import assign
-import plotly.express as px
 import dash_bootstrap_components as dbc
 
 def get_states(bounds):
     bounds_ = eval(json.dumps(bounds))
-
-    # print(bounds_)
     
     lamin = bounds_[0][0]
     lomin = bounds_[0][1]
@@ -20,9 +17,9 @@ def get_states(bounds):
  
     url = f"https://opensky-network.org/api/states/all?lamin={lamin}&lomin={lomin}&lamax={lamax}&lomax={lomax}"
 
-    r = requests.get(url)
+    response = requests.get(url)
 
-    states = r.json()["states"]
+    states = response.json()["states"]
 
     features = []
 
@@ -47,59 +44,23 @@ def get_states(bounds):
             "position_source": i[16],
         })
 
-        # features.append({
-        #     "type": "Feature",
-        #     "geometry": {
-        #         "type": "Point",
-        #         "coordinates": [i[5], i[6]]
-        #     },
-        #     # "properties": {
-        #     #     "icao24": i[0],
-        #     #     "callsign": i[1][:-2],
-        #     #     "origin_country": i[2],
-        #     #     "time_position": i[3],
-        #     #     "last_contact": i[4],
-        #     #     "baro_altitude": i[7],
-        #     #     "on_ground": i[8],
-        #     #     "velocity": i[9],
-        #     #     "true_track": i[10],
-        #     #     "vertical_rate": i[11],
-        #     #     "sensors": i[12],
-        #     #     "geo_altitude": i[13],
-        #     #     "squawk": i[14],
-        #     #     "spi": i[15],
-        #     #     "position_source": i[16],
-        #     # }
-        # })
-
-    # states_2 = {
-    #     "type": "FeatureCollection",
-    #     "features": features
-    # }
-
-    # pprint(features)
-
-    # print(features)
-
     return features
 
-def get_flight_status(callsign) -> dict:
+def get_flight_status(callsign: str) -> dict:
     from datetime import date
     today = date.today().strftime("%Y-%m-%d")
     url = f"https://aerodatabox.p.rapidapi.com/flights/icao24/{callsign}/{today}"
 
-    print(url)
-
     headers = {
         'x-rapidapi-host': "aerodatabox.p.rapidapi.com",
         'x-rapidapi-key': "c22bc56ab3msha6d5cd5860a018bp1416c6jsn25de702cffcb"
-        }
+    }
 
     response = requests.request("GET", url, headers=headers)
 
     return json.loads(response.text)[0]
 
-def get_image_url(aircraft_model):
+def get_image_url(aircraft_model: str) -> str:
     url = "https://bing-image-search1.p.rapidapi.com/images/search"
 
     params = {"q": aircraft_model}
@@ -113,13 +74,15 @@ def get_image_url(aircraft_model):
 
     return json.loads(response.text)["value"][0]["thumbnailUrl"]
 
+
+# JavaScript
 point_to_layer = assign("""
     function(feature, latlng, context) {
         var marker_ = L.icon({
             iconUrl: "https://dash-leaflet.herokuapp.com/assets/icon_plane.png",
         });
         var true_track = feature.properties.true_track;
-        return L.marker(latlng, {icon: marker_, rotationAngle: true_track});
+        return L.marker(latlng, { icon: marker_, rotationAngle: true_track });
     }
 """)
 
@@ -139,6 +102,7 @@ cluster_to_layer = assign("""
     }
 """)
 
+
 app = Dash(
     external_stylesheets=[dbc.themes.BOOTSTRAP],
     meta_tags=[{'name': 'viewport',
@@ -146,28 +110,24 @@ app = Dash(
     }]
 )
 
-
 PLOTLY_LOGO = "https://openskynetwork.github.io/opensky-api/_static/radar_small.png"
 
 app.layout = html.Div([
     dbc.Navbar(
-        dbc.Container(
-            [
-                html.A(
-                    # Use row and col to control vertical alignment of logo / brand
-                    dbc.Row(
-                        [
-                            dbc.Col(html.Img(src=PLOTLY_LOGO, height="30px")),
-                            dbc.Col(dbc.NavbarBrand("ADS-B Tracker", className="ms-2")),
-                        ],
-                        align="center",
-                        className="g-0",
-                    ),
-                    href="https://plotly.com",
-                    style={"textDecoration": "none"},
+        dbc.Container([
+            html.A(
+                dbc.Row(
+                    [
+                        dbc.Col(html.Img(src=PLOTLY_LOGO, height="30px")),
+                        dbc.Col(dbc.NavbarBrand("ADS-B Tracker", className="ms-2")),
+                    ],
+                    align="center",
+                    className="g-0",
                 ),
-            ]
-        ),
+                href="#",
+                style={"textDecoration": "none"},
+            ),
+        ]),
         color="dark",
         dark=True,
     ),
@@ -196,32 +156,16 @@ app.layout = html.Div([
     ),
 ])
 
-# @app.callback(
-#     Output("tooltip", "children"),
-#     [Input("data", "hover_feature")],
-# )
 @app.callback(
     Output("modal-centered", "children"),
     Output("modal-centered", "is_open"),
-    [Input("data", "click_feature")],
+    [Input("data", "click_feature")], # hover_feature
 )
-def update_tooltip(hover_feature):
-    if hover_feature is None:
+def update_tooltip(feature):
+    if feature is None:
         return None
 
-    # return html.Div(f'''Callsign: {hover_feature["properties"]["callsign"]}\n
-    #         Heading: {hover_feature["properties"]["true_track"]}\n
-    #         {hover_feature["properties"]["icao24"]}\n
-    #         Country of origin: {hover_feature["properties"]["origin_country"]}\n
-    #         Grounded: {hover_feature["properties"]["on_ground"]}\n
-    #         Speed: {hover_feature["properties"]["velocity"]}\n
-    #         Vertical speed: {hover_feature["properties"]["vertical_rate"]}\n
-    #         Altitude: {hover_feature["properties"]["geo_altitude"]}\n
-    #         Squawk code: {hover_feature["properties"]["squawk"]}''',
-    #     style={"whiteSpace": "pre-wrap"}
-    # )
-
-    flight_status = get_flight_status(hover_feature["properties"]["icao24"])
+    flight_status = get_flight_status(feature["properties"]["icao24"])
     aircraft_model = flight_status["aircraft"]["model"]
     departure_airport = flight_status["departure"]["airport"]["municipalityName"]
     arrival_airport = flight_status["arrival"]["airport"]["municipalityName"]
@@ -230,32 +174,29 @@ def update_tooltip(hover_feature):
     image_url = get_image_url(f"{airline_name} {aircraft_model}")
 
     return ([
-        dbc.ModalHeader(dbc.ModalTitle(f'{hover_feature["properties"]["callsign"]} {departure_airport} -> {arrival_airport}'), close_button=True),
+        dbc.ModalHeader(dbc.ModalTitle(f'{feature["properties"]["callsign"]} {departure_airport} -> {arrival_airport}'), close_button=True),
         dbc.ModalBody(
-            dbc.Row(
-                [
-                    dbc.Col(html.Div([
-                        html.P(f'''Heading: {hover_feature["properties"]["true_track"]}'''),
-                        # html.P(f'''Grounded: {hover_feature["properties"]["on_ground"]}'''),
-                        html.P(f'''Speed: {hover_feature["properties"]["velocity"]} m/s'''),
-                        html.P(f'''Vertical speed: {hover_feature["properties"]["vertical_rate"]} m/s'''),
-                        html.P(f'''Altitude: {hover_feature["properties"]["geo_altitude"]} meters'''),
-                        # html.P(f'''Squawk code: {hover_feature["properties"]["squawk"]}''')
-                        ],
-                        style={"whiteSpace": "pre-wrap"}
-                        ),
-                    ),
+            dbc.Row([
                     dbc.Col(
-                        [dbc.Row(html.P(f"{airline_name} {aircraft_model}")),
+                        html.Div([
+                            html.P(f'''Heading: {hover_feature["properties"]["true_track"]}'''),
+                            html.P(f'''Grounded: {hover_feature["properties"]["on_ground"]}'''),
+                            html.P(f'''Speed: {hover_feature["properties"]["velocity"]} m/s'''),
+                            html.P(f'''Vertical speed: {hover_feature["properties"]["vertical_rate"]} m/s'''),
+                            html.P(f'''Altitude: {hover_feature["properties"]["geo_altitude"]} meters'''),
+                            # html.P(f'''Squawk code: {hover_feature["properties"]["squawk"]}''')
+                        ], style={"whiteSpace": "pre-wrap"}),
+                    ),
+                    dbc.Col([
+                        dbc.Row(html.P(f"{airline_name} {aircraft_model}")),
                         dbc.Row(html.Img(src=image_url,
                             # height="200px"
-                        )),]
-                    ),
-                ],
-                # className="g-0",
+                        )),
+                    ]),
+                ], # className="g-0",
             ),
-        )],
-    True)
+        )
+    ], True)
 
 @app.callback(
     Output("data", "data"),
@@ -264,12 +205,8 @@ def update_tooltip(hover_feature):
 )
 def log_bounds(bounds, n_intervals):
     states = get_states(bounds)
-
     geojson = dlx.dicts_to_geojson([{**state} for state in states]) # , **dict(tooltip = state["callsign"])
-
-    # print(type(states_geojson))
     return geojson
-
 
 if __name__ == "__main__":
     app.run_server(host="0.0.0.0", debug=True)
