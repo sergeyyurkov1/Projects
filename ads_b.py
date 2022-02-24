@@ -7,7 +7,7 @@ from pprint import pprint
 from dash_extensions.javascript import assign
 import dash_bootstrap_components as dbc
 
-def get_states(bounds):
+def get_states(bounds: list) -> list:
     bounds_ = eval(json.dumps(bounds))
     
     lamin = bounds_[0][0]
@@ -112,49 +112,54 @@ app = Dash(
 
 PLOTLY_LOGO = "https://openskynetwork.github.io/opensky-api/_static/radar_small.png"
 
-app.layout = html.Div([
-    dbc.Navbar(
-        dbc.Container([
-            html.A(
-                dbc.Row(
-                    [
-                        dbc.Col(html.Img(src=PLOTLY_LOGO, height="30px")),
-                        dbc.Col(dbc.NavbarBrand("ADS-B Tracker", className="ms-2")),
-                    ],
-                    align="center",
-                    className="g-0",
+app.layout = html.Div(
+    [
+        dbc.Navbar(
+            dbc.Container(
+                [
+                    html.A(
+                        dbc.Row(
+                            [
+                                dbc.Col(html.Img(src=PLOTLY_LOGO, height="30px")),
+                                dbc.Col(dbc.NavbarBrand("ADS-B Tracker", className="ms-2")),
+                            ],
+                            align="center",
+                            className="g-0",
+                        ),
+                        href="#",
+                        style={"textDecoration": "none"},
+                    ),
+                ]
+            ),
+            color="dark",
+            dark=True,
+        ),
+        dl.Map(
+            children=[
+                dl.TileLayer(),
+                dl.GeoJSON(id="data",
+                    options=dict(pointToLayer=point_to_layer),
+                    cluster=True,
+                    zoomToBoundsOnClick=True,
+                    clusterToLayer=cluster_to_layer,
+                    # children=[dl.Tooltip(id="tooltip")]
                 ),
-                href="#",
-                style={"textDecoration": "none"},
-            ),
-        ]),
-        color="dark",
-        dark=True,
-    ),
-    dl.Map(
-        children=[dl.TileLayer(),
-            dl.GeoJSON(id="data",
-                options=dict(pointToLayer=point_to_layer),
-                cluster=True,
-                zoomToBoundsOnClick=True,
-                clusterToLayer=cluster_to_layer,
-                # children=[dl.Tooltip(id="tooltip")]
-            ),
-        ],
-        style={"width": "100%", "height": "100vh"},
-        id="map"
-    ), # 100vw, 100vh, 500px
-    dcc.Interval(
-        id="interval-component",
-        interval=10*1000, # in milliseconds
-        n_intervals=0
-    ),
-    dbc.Modal(
-        id="modal-centered",
-        centered=True,
-        is_open=False,
-    ),
-])
+            ],
+            style={"width": "100%", "height": "100vh"},
+            id="map",
+        ), # 100vw, 100vh, 500px
+        dcc.Interval(
+            id="interval-component",
+            interval=10*1000, # in milliseconds
+            n_intervals=0
+        ),
+        dbc.Modal(
+            id="modal-centered",
+            centered=True,
+            is_open=False,
+        ),
+    ]
+)
 
 @app.callback(
     Output("modal-centered", "children"),
@@ -176,23 +181,29 @@ def update_tooltip(feature):
     return ([
         dbc.ModalHeader(dbc.ModalTitle(f'{feature["properties"]["callsign"]} {departure_airport} -> {arrival_airport}'), close_button=True),
         dbc.ModalBody(
-            dbc.Row([
+            dbc.Row(
+                [
                     dbc.Col(
-                        html.Div([
-                            html.P(f'''Heading: {hover_feature["properties"]["true_track"]}'''),
-                            html.P(f'''Grounded: {hover_feature["properties"]["on_ground"]}'''),
-                            html.P(f'''Speed: {hover_feature["properties"]["velocity"]} m/s'''),
-                            html.P(f'''Vertical speed: {hover_feature["properties"]["vertical_rate"]} m/s'''),
-                            html.P(f'''Altitude: {hover_feature["properties"]["geo_altitude"]} meters'''),
-                            # html.P(f'''Squawk code: {hover_feature["properties"]["squawk"]}''')
-                        ], style={"whiteSpace": "pre-wrap"}),
+                        html.Div(
+                            [
+                                html.P(f'''Heading: {hover_feature["properties"]["true_track"]}'''),
+                                html.P(f'''Grounded: {hover_feature["properties"]["on_ground"]}'''),
+                                html.P(f'''Speed: {hover_feature["properties"]["velocity"]} m/s'''),
+                                html.P(f'''Vertical speed: {hover_feature["properties"]["vertical_rate"]} m/s'''),
+                                html.P(f'''Altitude: {hover_feature["properties"]["geo_altitude"]} meters'''),
+                                # html.P(f'''Squawk code: {hover_feature["properties"]["squawk"]}''')
+                            ],
+                            style={"whiteSpace": "pre-wrap"}
+                        ),
                     ),
-                    dbc.Col([
-                        dbc.Row(html.P(f"{airline_name} {aircraft_model}")),
-                        dbc.Row(html.Img(src=image_url,
-                            # height="200px"
-                        )),
-                    ]),
+                    dbc.Col(
+                        [
+                            dbc.Row(html.P(f"{airline_name} {aircraft_model}")),
+                            dbc.Row(html.Img(src=image_url,
+                                # height="200px"
+                            )),
+                        ]
+                    ),
                 ], # className="g-0",
             ),
         )
