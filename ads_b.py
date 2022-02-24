@@ -68,7 +68,7 @@ def get_image_url(aircraft_model: str) -> str:
     headers = {
         'x-rapidapi-host': "bing-image-search1.p.rapidapi.com",
         'x-rapidapi-key': "c22bc56ab3msha6d5cd5860a018bp1416c6jsn25de702cffcb"
-        }
+    }
 
     response = requests.request("GET", url, headers=headers, params=params)
 
