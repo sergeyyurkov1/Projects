@@ -48,7 +48,7 @@ def get_states(bounds: list) -> list:
     except:
         pass
 
-    return features[:300]
+    return features
 
 def get_flight_status(icao24: str) -> tuple:
     df = pd.read_csv("aircraftDatabase.csv", index_col="icao24")
@@ -110,7 +110,7 @@ app = Dash(
     external_stylesheets=["https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css", dbc.themes.BOOTSTRAP],
     prevent_initial_callbacks=True,
     meta_tags=[{'name': 'viewport',
-        'content': 'width=device-width, initial-scale=1.0, maximum-scale=1.2, minimum-scale=0.6'
+        'content': 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'
     }]
 )
 
@@ -143,7 +143,7 @@ app.layout = html.Div(
         ),
         dl.Map(
             children=[
-                dl.LocateControl(options={'locateOptions': {'enableHighAccuracy': True}}),
+                dl.LocateControl(options={'locateOptions': {'enableHighAccuracy': False}}),
                 dl.TileLayer(url=url, maxZoom=20, attribution=attribution),
                 dl.GeoJSON(id="data",
                     options=dict(pointToLayer=point_to_layer),
@@ -181,6 +181,25 @@ def update_tooltip(feature):
 
     callsign = feature["properties"]["callsign"]
 
+    true_track = feature["properties"]["true_track"]
+    if not (isinstance(true_track, int) or isinstance(true_track, float)):
+        true_track = "----"
+    on_ground = feature["properties"]["on_ground"]
+    if not isinstance(on_ground, bool):
+        on_ground = "----"
+    velocity = feature["properties"]["velocity"]
+    if not (isinstance(velocity, int) or isinstance(velocity, float)):
+        velocity = "----"
+    vertical_rate = feature["properties"]["vertical_rate"]
+    if not (isinstance(vertical_rate, int) or isinstance(vertical_rate, float)):
+        vertical_rate = "----"
+    geo_altitude = feature["properties"]["geo_altitude"]
+    if not (isinstance(geo_altitude, int) or isinstance(geo_altitude, float)):
+        geo_altitude = "----"
+    squawk = feature["properties"]["squawk"]
+    if squawk == None:
+        squawk = "----" 
+    
     return ([
         dbc.ModalHeader(
             dbc.ModalTitle(
@@ -194,14 +213,14 @@ def update_tooltip(feature):
                     dbc.Col(
                         html.Div(
                             [
-                                html.P(f'''Heading: {feature["properties"]["true_track"]}'''),
-                                html.P(f'''Grounded: {feature["properties"]["on_ground"]}'''),
-                                html.P(f'''Speed: {feature["properties"]["velocity"]} m/s'''),
-                                html.P(f'''Vertical speed: {feature["properties"]["vertical_rate"]} m/s'''),
-                                html.P(f'''Altitude: {feature["properties"]["geo_altitude"]} meters'''),
-                                html.P(f'''Squawk code: {feature["properties"]["squawk"]}'''),
+                                html.P(f"Heading: {true_track}°"),
+                                html.P(f"Grounded: {on_ground}"),
+                                html.P(f"Speed: {velocity} m/s"),
+                                html.P(f"Vertical speed: {vertical_rate} m/s"),
+                                html.P(f"Altitude: {geo_altitude} meters"),
+                                html.P(f"Squawk code: {squawk}"),
                             ],
-                            style={"whiteSpace": "pre-wrap"}
+                            style={"whiteSpace": "pre-wrap", 'font-family': 'Courier, sans-serif'}
                         ),
                     ),
                     dbc.Col(
@@ -225,4 +244,4 @@ def log_bounds(bounds, n_intervals):
     return geojson
 
 if __name__ == "__main__":
-    app.run_server(host="0.0.0.0", debug=True)
+    app.run_server(host="0.0.0.0", debug=False)
