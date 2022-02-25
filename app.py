@@ -106,7 +106,7 @@ cluster_to_layer = assign("""
 """)
 
 
-app = Dash(
+app = Dash(__name__,
     external_stylesheets=["https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css", dbc.themes.BOOTSTRAP],
     prevent_initial_callbacks=True,
     meta_tags=[{'name': 'viewport',
@@ -245,4 +245,4 @@ def log_bounds(bounds, n_intervals):
     return geojson
 
 if __name__ == "__main__":
-    app.run_server(debug=True) # host="0.0.0.0"
+    app.run_server(debug=False) # host="0.0.0.0"
