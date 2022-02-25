@@ -62,20 +62,18 @@ def get_flight_status(icao24: str) -> tuple:
 
     return operator, manufacturername, model
 
-def get_image_url(aircraft_model: str) -> str:
-    from bs4 import BeautifulSoup
-    
-    url = f"https://flightaware.com/photos/description/{aircraft_model}"
+def get_aircraft_data(id: str) -> dict:
+    url = f"http://127.0.0.1:5000/api/v1/data?id={id}"
     url = url.replace(" ", "%20")
 
     response = requests.get(url)
 
-    html = response.text
-    soup = BeautifulSoup(html, features="lxml")
+    if response.status_code != 200:
+        return False
+    
+    data = response.json()
 
-    image_url = soup.find("img", {"class": "thumbnail_nav"})["src"]
-
-    return image_url
+    return data
 
 
 # JavaScript
@@ -200,18 +198,41 @@ def update_tooltip(feature):
         geo_altitude = "----"
     squawk = feature["properties"]["squawk"]
     if squawk == None:
-        squawk = "----" 
-    
+        squawk = "----"
+
+    aircraft_data = get_aircraft_data(callsign)
+
+    if aircraft_data == False:
+        image_url = "https://via.placeholder.com/500x500?text=Image+not+found"
+        airline = ""
+        aircraft_type = ""
+    else:
+        airline = aircraft_data["airline"]
+        aircraft_type = aircraft_data["aircraft_type"]
+        
+        import random
+        image_url_1 = random.choice(aircraft_data["image_urls"])
+        image_url_2 = random.choice(aircraft_data["image_urls"])
+
+    print(airline)
+
     return ([
         dbc.ModalHeader(
             dbc.ModalTitle(
-                html.A(callsign, href=f"https://flightaware.com/live/flight/{callsign}", target="_blank"),
+                html.P([f"{airline} {aircraft_type} ", html.A(callsign, href=f"https://flightaware.com/live/flight/{callsign}", target="_blank")])
             ),
             close_button=True,
         ),
         dbc.ModalBody(
             dbc.Row(
                 [
+                    dbc.Col(
+                        [
+                            dbc.Row( (html.Img(src=image_url_1)) ), # height="200px"
+                            html.Br(),
+                            dbc.Row( (html.Img(src=image_url_2)) ), # height="200px"
+                        ]
+                    ),
                     dbc.Col(
                         html.Div(
                             [
@@ -224,11 +245,6 @@ def update_tooltip(feature):
                             ],
                             style={"whiteSpace": "pre-wrap", 'font-family': 'Courier, sans-serif'}
                         ),
-                    ),
-                    dbc.Col(
-                        [
-                            dbc.Row( (html.Img(src="https://via.placeholder.com/500x500?text=Image+coming+soon")) ), # height="200px"
-                        ]
                     ),
                 ], # className="g-0",
             ),
@@ -246,4 +262,4 @@ def log_bounds(bounds, n_intervals):
     return geojson
 
 if __name__ == "__main__":
-    app.run_server(debug=False) # host="0.0.0.0"
+    app.run_server(debug=True) # host="0.0.0.0"
