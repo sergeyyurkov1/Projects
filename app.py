@@ -139,6 +139,8 @@ app.layout = html.Div(
             ),
             color="dark",
             dark=True,
+            # style={"position": "absolute"},
+            # class_name="navbar--fixed",
         ),
         dl.Map(
             children=[
@@ -154,30 +156,26 @@ app.layout = html.Div(
             ],
             center=(31, 121), zoom=5,
             preferCanvas=True,
-            style={"width": "100%", "height": "100vh"},
+            style={"width": "100%", "height": "calc(100vh - 46px)"},
             id="map",
         ), # 100vw, 100vh, 500px
+        dbc.Spinner(html.Div(id="loading-output"), color="primary", type="grow", fullscreen=True, fullscreen_style={"z-index": "1000", "background-color": "rgba(0, 0, 0, 0.5)"}),
         dcc.Interval(
             id="interval-component",
             interval=10*1000, # in milliseconds
             n_intervals=0
         ),
-        dbc.Modal(
-            id="modal-centered",
-            centered=True,
-            is_open=False,
-        ),
     ]
 )
 
 @app.callback(
-    Output("modal-centered", "children"),
-    Output("modal-centered", "is_open"),
-    Input("data", "click_feature"), # hover_feature
+    Output("loading-output", "children"),
+    # Output("modal-centered", "is_open"),
+    [Input("data", "click_feature")] # hover_feature
 )
 def update_tooltip(feature):
     if feature is None:
-        return ("", False)
+        return ("")
 
     callsign = feature["properties"]["callsign"]
 
@@ -202,8 +200,6 @@ def update_tooltip(feature):
 
     aircraft_data = get_aircraft_data(callsign)
 
-    print(aircraft_data)
-
     if aircraft_data == False:
         image_url_1 = "https://via.placeholder.com/300x200?text=Image+not+found"
         airline = ""
@@ -218,39 +214,43 @@ def update_tooltip(feature):
             import random
             image_url_1 = random.choice(aircraft_data["image_urls"])
 
-    return ([
-        dbc.ModalHeader(
-            dbc.ModalTitle(
-                html.A(callsign, href=f"https://flightaware.com/live/flight/{callsign}", target="_blank")
+    return dbc.Modal(
+        [
+            dbc.ModalHeader(
+                dbc.ModalTitle(
+                    html.A(callsign, href=f"https://flightaware.com/live/flight/{callsign}", target="_blank")
+                ),
+                close_button=True,
             ),
-            close_button=True,
-        ),
-        dbc.ModalBody(
-            dbc.Row(
-                [
-                    dbc.Col(
-                        [
-                            dbc.Row( html.P([f"{airline} {aircraft_type} ", ]) ),
-                            dbc.Row( (html.Img(src=image_url_1)) ),
-                        ]
-                    ),
-                    dbc.Col(
-                        html.Div(
+            dbc.ModalBody([
+                dbc.Row( html.P(f"{airline} {aircraft_type} ", style={'text-align': 'center', 'font-weight': 'bold'}) , justify="center"),
+                dbc.Row(
+                    [
+                        dbc.Col(
                             [
-                                html.P(f"Heading: {true_track}°"),
-                                html.P(f"Grounded: {on_ground}"),
-                                html.P(f"Speed: {velocity} m/s"),
-                                html.P(f"Vertical speed: {vertical_rate} m/s"),
-                                html.P(f"Altitude: {geo_altitude} meters"),
-                                html.P(f"Squawk code: {squawk}"),
-                            ],
-                            style={"whiteSpace": "pre-wrap", 'font-family': 'Courier, sans-serif'}
+                                dbc.Row( html.Img(src=image_url_1) , justify="center", align="center"),
+                            ], align="center"
                         ),
-                    ),
-                ], # className="g-0",
-            ),
-        )
-    ], True)
+                        dbc.Col(
+                            html.Div(
+                                [
+                                    html.P(f"Heading: {true_track}°"),
+                                    html.P(f"Grounded: {on_ground}"),
+                                    html.P(f"Speed: {velocity} m/s"),
+                                    html.P(f"Vertical speed: {vertical_rate} m/s"),
+                                    html.P(f"Altitude: {geo_altitude} meters"),
+                                    html.P(f"Squawk code: {squawk}"),
+                                ],
+                                # style={"whiteSpace": "pre-wrap", 'font-family': 'Courier, sans-serif'}
+                            ),
+                        ),
+                    ], # className="g-0",
+                ),
+            ], style={'font-family': 'Courier, sans-serif'})
+        ],
+        centered=True,
+        is_open=True,
+    )
 
 @app.callback(
     Output("data", "data"),
@@ -263,4 +263,4 @@ def log_bounds(bounds, n_intervals):
     return geojson
 
 if __name__ == "__main__":
-    app.run_server(debug=True) # host="0.0.0.0"
+    app.run_server(host="0.0.0.0", debug=True) # host="0.0.0.0"
