@@ -48,7 +48,7 @@ def get_states(bounds: list) -> list:
     except:
         pass
 
-    return features
+    return features[:200]
 
 def get_flight_status(icao24: str) -> tuple:
     df = pd.read_csv("aircraftDatabase.csv", index_col="icao24")
@@ -153,6 +153,7 @@ app.layout = html.Div(
                     # children=[dl.Tooltip(id="tooltip")]
                 ),
             ],
+            center=(31, 121), zoom=5,
             preferCanvas=True,
             style={"width": "100%", "height": "100vh"},
             id="map",
@@ -203,7 +204,7 @@ def update_tooltip(feature):
     return ([
         dbc.ModalHeader(
             dbc.ModalTitle(
-                html.A(callsign, href=f"https://flightaware.com/live/flight/{callsign}"),
+                html.A(callsign, href=f"https://flightaware.com/live/flight/{callsign}", target="_blank"),
             ),
             close_button=True,
         ),
@@ -225,7 +226,7 @@ def update_tooltip(feature):
                     ),
                     dbc.Col(
                         [
-                            dbc.Row( (html.Img(src="https://via.placeholder.com/500x500?text=No+image+available")) ), # height="200px"
+                            dbc.Row( (html.Img(src="https://via.placeholder.com/500x500?text=Image+coming+soon")) ), # height="200px"
                         ]
                     ),
                 ], # className="g-0",
@@ -244,4 +245,4 @@ def log_bounds(bounds, n_intervals):
     return geojson
 
 if __name__ == "__main__":
-    app.run_server(host="0.0.0.0", debug=False)
+    app.run_server(host="0.0.0.0", debug=True)
