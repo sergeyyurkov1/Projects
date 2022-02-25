@@ -50,18 +50,7 @@ def get_states(bounds: list) -> list:
     return features[:300]
 
 def get_flight_status(callsign: str) -> dict:
-    from datetime import date
-    today = date.today().strftime("%Y-%m-%d")
-    url = f"https://aerodatabox.p.rapidapi.com/flights/icao24/{callsign}/{today}"
-
-    headers = {
-        'x-rapidapi-host': "aerodatabox.p.rapidapi.com",
-        'x-rapidapi-key': "c22bc56ab3msha6d5cd5860a018bp1416c6jsn25de702cffcb"
-    }
-
-    response = requests.request("GET", url, headers=headers)
-
-    return json.loads(response.text)[0]
+    pass
 
 def get_image_url(aircraft_model: str) -> str:
     url = "https://bing-image-search1.p.rapidapi.com/images/search"
