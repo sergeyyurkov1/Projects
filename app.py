@@ -173,7 +173,7 @@ app.layout = html.Div(
 @app.callback(
     Output("modal-centered", "children"),
     Output("modal-centered", "is_open"),
-    [Input("data", "click_feature")], # hover_feature
+    Input("data", "click_feature"), # hover_feature
 )
 def update_tooltip(feature):
     if feature is None:
