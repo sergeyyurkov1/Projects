@@ -202,24 +202,26 @@ def update_tooltip(feature):
 
     aircraft_data = get_aircraft_data(callsign)
 
+    print(aircraft_data)
+
     if aircraft_data == False:
-        image_url = "https://via.placeholder.com/500x500?text=Image+not+found"
+        image_url_1 = "https://via.placeholder.com/300x200?text=Image+not+found"
         airline = ""
         aircraft_type = ""
     else:
         airline = aircraft_data["airline"]
         aircraft_type = aircraft_data["aircraft_type"]
         
-        import random
-        image_url_1 = random.choice(aircraft_data["image_urls"])
-        image_url_2 = random.choice(aircraft_data["image_urls"])
-
-    print(airline)
+        if len(aircraft_data["image_urls"]) == 0:
+            image_url_1 = "https://via.placeholder.com/300x200?text=Image+not+found"
+        else:
+            import random
+            image_url_1 = random.choice(aircraft_data["image_urls"])
 
     return ([
         dbc.ModalHeader(
             dbc.ModalTitle(
-                html.P([f"{airline} {aircraft_type} ", html.A(callsign, href=f"https://flightaware.com/live/flight/{callsign}", target="_blank")])
+                html.A(callsign, href=f"https://flightaware.com/live/flight/{callsign}", target="_blank")
             ),
             close_button=True,
         ),
@@ -228,9 +230,8 @@ def update_tooltip(feature):
                 [
                     dbc.Col(
                         [
-                            dbc.Row( (html.Img(src=image_url_1)) ), # height="200px"
-                            html.Br(),
-                            dbc.Row( (html.Img(src=image_url_2)) ), # height="200px"
+                            dbc.Row( html.P([f"{airline} {aircraft_type} ", ]) ),
+                            dbc.Row( (html.Img(src=image_url_1)) ),
                         ]
                     ),
                     dbc.Col(
