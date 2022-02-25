@@ -177,7 +177,7 @@ app.layout = html.Div(
 )
 def update_tooltip(feature):
     if feature is None:
-        return None
+        return ("", False)
 
     callsign = feature["properties"]["callsign"]
 
