@@ -5,3 +5,4 @@ plotly
 dash
 dash-extensions
 dash-bootstrap-components
+requests
