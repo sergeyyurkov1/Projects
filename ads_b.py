@@ -6,6 +6,7 @@ import requests
 from pprint import pprint
 from dash_extensions.javascript import assign
 import dash_bootstrap_components as dbc
+import pandas as pd
 
 def get_states(bounds: list) -> list:
     bounds_ = eval(json.dumps(bounds))
@@ -49,22 +50,32 @@ def get_states(bounds: list) -> list:
 
     return features[:300]
 
-def get_flight_status(callsign: str) -> dict:
-    pass
+def get_flight_status(icao24: str) -> tuple:
+    df = pd.read_csv("aircraftDatabase.csv", index_col="icao24")
+
+    try:
+        operator = df.loc[icao24, "operator"]
+        manufacturername = df.loc[icao24, "manufacturername"]
+        model = df.loc[icao24, "model"]
+    except KeyError:
+        operator, manufacturername, model = "", "", ""
+
+    return operator, manufacturername, model
 
 def get_image_url(aircraft_model: str) -> str:
-    url = "https://bing-image-search1.p.rapidapi.com/images/search"
+    from bs4 import BeautifulSoup
+    
+    url = f"https://flightaware.com/photos/description/{aircraft_model}"
+    url = url.replace(" ", "%20")
 
-    params = {"q": aircraft_model}
+    response = requests.get(url)
 
-    headers = {
-        'x-rapidapi-host': "bing-image-search1.p.rapidapi.com",
-        'x-rapidapi-key': "c22bc56ab3msha6d5cd5860a018bp1416c6jsn25de702cffcb"
-    }
+    html = response.text
+    soup = BeautifulSoup(html, features="lxml")
 
-    response = requests.request("GET", url, headers=headers, params=params)
+    image_url = soup.find("img", {"class": "thumbnail_nav"})["src"]
 
-    return json.loads(response.text)["value"][0]["thumbnailUrl"]
+    return image_url
 
 
 # JavaScript
@@ -168,38 +179,34 @@ def update_tooltip(feature):
     if feature is None:
         return None
 
-    flight_status = get_flight_status(feature["properties"]["icao24"])
-    aircraft_model = flight_status["aircraft"]["model"]
-    departure_airport = flight_status["departure"]["airport"]["municipalityName"]
-    arrival_airport = flight_status["arrival"]["airport"]["municipalityName"]
-    airline_name = flight_status["airline"]["name"]
-
-    image_url = get_image_url(f"{airline_name} {aircraft_model}")
+    callsign = feature["properties"]["callsign"]
 
     return ([
-        dbc.ModalHeader(dbc.ModalTitle(f'{feature["properties"]["callsign"]} {departure_airport} -> {arrival_airport}'), close_button=True),
+        dbc.ModalHeader(
+            dbc.ModalTitle(
+                html.A("%s" % callsign, href=f"https://flightaware.com/live/flight/{callsign}"),
+            ),
+            close_button=True,
+        ),
         dbc.ModalBody(
             dbc.Row(
                 [
                     dbc.Col(
                         html.Div(
                             [
-                                html.P(f'''Heading: {hover_feature["properties"]["true_track"]}'''),
-                                html.P(f'''Grounded: {hover_feature["properties"]["on_ground"]}'''),
-                                html.P(f'''Speed: {hover_feature["properties"]["velocity"]} m/s'''),
-                                html.P(f'''Vertical speed: {hover_feature["properties"]["vertical_rate"]} m/s'''),
-                                html.P(f'''Altitude: {hover_feature["properties"]["geo_altitude"]} meters'''),
-                                # html.P(f'''Squawk code: {hover_feature["properties"]["squawk"]}''')
+                                html.P(f'''Heading: {feature["properties"]["true_track"]}'''),
+                                html.P(f'''Grounded: {feature["properties"]["on_ground"]}'''),
+                                html.P(f'''Speed: {feature["properties"]["velocity"]} m/s'''),
+                                html.P(f'''Vertical speed: {feature["properties"]["vertical_rate"]} m/s'''),
+                                html.P(f'''Altitude: {feature["properties"]["geo_altitude"]} meters'''),
+                                html.P(f'''Squawk code: {feature["properties"]["squawk"]}'''),
                             ],
                             style={"whiteSpace": "pre-wrap"}
                         ),
                     ),
                     dbc.Col(
                         [
-                            dbc.Row(html.P(f"{airline_name} {aircraft_model}")),
-                            dbc.Row(html.Img(src=image_url,
-                                # height="200px"
-                            )),
+                            dbc.Row( (html.Img(src="https://via.placeholder.com/500x500?text=No+image+available")) ), # height="200px"
                         ]
                     ),
                 ], # className="g-0",
