@@ -1,7 +1,7 @@
 gunicorn
 pandas
-dash_leaflet
+dash-leaflet
 plotly
 dash
-dash_extensions
-dash_bootstrap_components
+dash-extensions
+dash-bootstrap-components
