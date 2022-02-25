@@ -203,7 +203,7 @@ def update_tooltip(feature):
     return ([
         dbc.ModalHeader(
             dbc.ModalTitle(
-                html.A("%s" % callsign, href=f"https://flightaware.com/live/flight/{callsign}"),
+                html.A(callsign, href=f"https://flightaware.com/live/flight/{callsign}"),
             ),
             close_button=True,
         ),
