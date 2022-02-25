@@ -113,6 +113,7 @@ app = Dash(__name__,
         'content': 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'
     }]
 )
+server = app.server
 
 PLOTLY_LOGO = "https://openskynetwork.github.io/opensky-api/_static/radar_small.png"
 
