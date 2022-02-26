@@ -218,15 +218,6 @@ def set_overlay(n1, n2, n3, n4):
     else:
         return "none", {"key": generate_key()}
 
-    # if n1:
-    #     return "precipitation_new", {"key": generate_key()}
-    # elif n2:
-    #     return "wind_new", {"key": generate_key()}
-    # elif n3:
-    #     return "clouds_new", {"key": generate_key()}
-    # elif n4:
-    #     return "none", {"key": generate_key()}
-
 @app.callback(
     Output("loading-output", "children"),
     # Output("modal-centered", "is_open"),
