@@ -1,0 +1,13 @@
+.dash-spinner * {
+    display: none !important;
+}
+
+.dash-spinner {
+    background-image: url("3.gif");
+    background-size: contain;
+    /* width: 50px !important;
+    height: 50px !important; */
+    width: 100px !important;
+    height: 100px !important;
+    background-repeat: no-repeat;
+}

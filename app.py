@@ -159,7 +159,7 @@ app.layout = html.Div(
             style={"width": "100%", "height": "calc(100vh - 46px)"},
             id="map",
         ), # 100vw, 100vh, 500px
-        dbc.Spinner(html.Div(id="loading-output"), color="primary", type="grow", fullscreen=True, fullscreen_style={"z-index": "1000", "background-color": "rgba(0, 0, 0, 0.5)"}),
+        dcc.Loading(html.Div(id="loading-output"), type="default", fullscreen=True, style={"z-index": "1000", "background-color": "rgba(0, 0, 0, 0.5)"}),
         dcc.Interval(
             id="interval-component",
             interval=10*1000, # in milliseconds
