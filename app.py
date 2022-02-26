@@ -63,7 +63,7 @@ def get_flight_status(icao24: str) -> tuple:
     return operator, manufacturername, model
 
 def get_aircraft_data(id: str) -> dict:
-    url = f"http://127.0.0.1:5000/api/v1/data?id={id}"
+    url = f"https://aircraft-api.herokuapp.com/api/v1/data?id={id}"
     url = url.replace(" ", "%20")
 
     response = requests.get(url)
@@ -263,4 +263,4 @@ def log_bounds(bounds, n_intervals):
     return geojson
 
 if __name__ == "__main__":
-    app.run_server(host="0.0.0.0", debug=True) # host="0.0.0.0"
+    app.run_server(debug=True) # host="0.0.0.0"
