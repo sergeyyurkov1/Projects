@@ -153,6 +153,12 @@ app.layout = html.Div(
                     clusterToLayer=cluster_to_layer,
                     # children=[dl.Tooltip(id="tooltip")]
                 ),
+                dl.WMSTileLayer(
+                    url="https://tile.openweathermap.org/map/{layers}/{z}/{x}/{y}.png?appid=20ef87846f48421c60279f69fa1e85ca",
+                    layers="precipitation_new",
+                    format="image/png",
+                    transparent=True,
+                ),
             ],
             center=(31, 121), zoom=5,
             preferCanvas=True,
