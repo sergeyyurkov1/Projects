@@ -1,7 +1,7 @@
 import dash_leaflet as dl
 import dash_leaflet.express as dlx
 import json
-from dash import html, Input, Output, Dash, dcc
+from dash import html, Input, Output, Dash, dcc, callback_context
 import requests
 from pprint import pprint
 from dash_extensions.javascript import assign
@@ -103,6 +103,10 @@ cluster_to_layer = assign("""
     }
 """)
 
+def generate_key():
+    import uuid
+    return str(uuid.uuid4())
+
 
 app = Dash(__name__,
     external_stylesheets=["https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css", dbc.themes.BOOTSTRAP],
@@ -135,6 +139,24 @@ app.layout = html.Div(
                         href="#",
                         style={"textDecoration": "none"},
                     ),
+                    dbc.DropdownMenu(
+                        [
+                            dbc.DropdownMenuItem(
+                                "Precipitation", id="precipitation", n_clicks=0
+                            ),
+                            dbc.DropdownMenuItem(
+                                "Wind speed", id="wind_speed", n_clicks=0
+                            ),
+                            dbc.DropdownMenuItem(
+                                "Clouds", id="clouds", n_clicks=0
+                            ),
+                            dbc.DropdownMenuItem(
+                                "None", id="none", n_clicks=0
+                            ),
+                        ],
+                        label="Weather overlay",
+                        menu_variant="dark",
+                    ),
                 ]
             ),
             color="dark",
@@ -158,11 +180,12 @@ app.layout = html.Div(
                     layers="precipitation_new",
                     format="image/png",
                     transparent=True,
+                    id="layer1",
                 ),
             ],
             center=(31, 121), zoom=5,
             preferCanvas=True,
-            style={"width": "100%", "height": "calc(100vh - 46px)"},
+            style={"width": "100%", "height": "calc(100vh - 54px)"},
             id="map",
         ), # 100vw, 100vh, 500px
         dcc.Loading(html.Div(id="loading-output"), type="default", fullscreen=True, style={"z-index": "1000", "background-color": "rgba(0, 0, 0, 0.5)"}),
@@ -173,6 +196,31 @@ app.layout = html.Div(
         ),
     ]
 )
+
+@app.callback(
+    Output("layer1", "layers"),
+    Output("layer1", "extraProps"),
+    Input("precipitation", "n_clicks"),
+    Input("wind_speed", "n_clicks"),
+    Input("clouds", "n_clicks"),
+    Input("none", "n_clicks")
+)
+def set_overlay(n1, n2, n3, n4):
+    # changed_id = [p['prop_id'] for p in callback_context.triggered][0]
+    # if 'precipitation' in changed_id:
+    #     msg = 'precipitation_new'
+    # elif 'none' in changed_id:
+    #     msg = 'None'
+    # else:
+    #     msg = ''
+    if n1:
+        return "precipitation_new", {"key": generate_key()}
+    elif n2:
+        return "wind_new", {"key": generate_key()}
+    elif n3:
+        return "clouds_new", {"key": generate_key()}
+    elif n4:
+        return "none", {"key": generate_key()}
 
 @app.callback(
     Output("loading-output", "children"),
