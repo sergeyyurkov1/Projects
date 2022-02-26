@@ -181,6 +181,8 @@ app.layout = html.Div(
                     format="image/png",
                     transparent=True,
                     id="layer1",
+                    extraProps={"key": generate_key()},
+                    updateInterval=10_000,
                 ),
             ],
             center=(31, 121), zoom=5,
@@ -206,21 +208,24 @@ app.layout = html.Div(
     Input("none", "n_clicks")
 )
 def set_overlay(n1, n2, n3, n4):
-    # changed_id = [p['prop_id'] for p in callback_context.triggered][0]
-    # if 'precipitation' in changed_id:
-    #     msg = 'precipitation_new'
-    # elif 'none' in changed_id:
-    #     msg = 'None'
-    # else:
-    #     msg = ''
-    if n1:
+    changed_id = [p['prop_id'] for p in callback_context.triggered][0]
+    if 'precipitation' in changed_id:
         return "precipitation_new", {"key": generate_key()}
-    elif n2:
+    elif 'wind_speed' in changed_id:
         return "wind_new", {"key": generate_key()}
-    elif n3:
+    elif 'clouds' in changed_id:
         return "clouds_new", {"key": generate_key()}
-    elif n4:
+    else:
         return "none", {"key": generate_key()}
+
+    # if n1:
+    #     return "precipitation_new", {"key": generate_key()}
+    # elif n2:
+    #     return "wind_new", {"key": generate_key()}
+    # elif n3:
+    #     return "clouds_new", {"key": generate_key()}
+    # elif n4:
+    #     return "none", {"key": generate_key()}
 
 @app.callback(
     Output("loading-output", "children"),
