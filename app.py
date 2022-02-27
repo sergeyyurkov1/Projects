@@ -238,11 +238,15 @@ def update_tooltip(feature):
     true_track = feature["properties"]["true_track"]
     if not (isinstance(true_track, int) or isinstance(true_track, float)):
         true_track = "----"
+    
     on_ground = feature["properties"]["on_ground"]
     if not isinstance(on_ground, bool):
         in_flight = "----"
+    elif on_ground == True:
+        in_flight = "No"
     else:
-        in_flight = not on_ground
+        in_flight = "Yes"
+    
     velocity = feature["properties"]["velocity"]
     if not (isinstance(velocity, int) or isinstance(velocity, float)):
         velocity = "----"
