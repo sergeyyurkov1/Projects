@@ -225,9 +225,14 @@ def set_overlay(n1, n2, n3, n4):
 )
 def update_tooltip(feature):
     if feature is None:
-        return ("")
+        return ("") # 
 
     callsign = feature["properties"]["callsign"]
+    if (callsign == "") or (" " in callsign):
+        callsign = "Callsign unknown"
+        callsign_element = callsign
+    else:
+        callsign_element = html.A(callsign, href=f"https://flightaware.com/live/flight/{callsign}", target="_blank")
 
     true_track = feature["properties"]["true_track"]
     if not (isinstance(true_track, int) or isinstance(true_track, float)):
@@ -270,7 +275,7 @@ def update_tooltip(feature):
         [
             dbc.ModalHeader(
                 dbc.ModalTitle(
-                    html.A(callsign, href=f"https://flightaware.com/live/flight/{callsign}", target="_blank")
+                    callsign_element
                 ),
                 close_button=True,
             ),
