@@ -234,7 +234,9 @@ def update_tooltip(feature):
         true_track = "----"
     on_ground = feature["properties"]["on_ground"]
     if not isinstance(on_ground, bool):
-        on_ground = "----"
+        in_flight = "----"
+    else:
+        in_flight = not on_ground
     velocity = feature["properties"]["velocity"]
     if not (isinstance(velocity, int) or isinstance(velocity, float)):
         velocity = "----"
@@ -284,8 +286,8 @@ def update_tooltip(feature):
                         dbc.Col(
                             html.Div(
                                 [
+                                    html.P(f"In flight: {in_flight}"),
                                     html.P(f"Heading: {true_track}°"),
-                                    html.P(f"Grounded: {on_ground}"),
                                     html.P(f"Speed: {velocity} m/s"),
                                     html.P(f"Vertical speed: {vertical_rate} m/s"),
                                     html.P(f"Altitude: {geo_altitude} meters"),
@@ -296,7 +298,7 @@ def update_tooltip(feature):
                         ),
                     ], # className="g-0",
                 ),
-            ], style={'font-family': 'Courier, sans-serif'})
+            ], style={'font-family': 'monospace, sans-serif'})
         ],
         centered=True,
         is_open=True,
