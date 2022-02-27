@@ -120,7 +120,7 @@ server = app.server
 PLOTLY_LOGO = "https://openskynetwork.github.io/opensky-api/_static/radar_small.png"
 
 url = 'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png'
-attribution = '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>'
+attribution = '<a href="https://stadiamaps.com">Stadia Maps</a> | <a href="https://openskynetwork.github.io/opensky-api/rest.html">OpenSky</a> | <a href="https://openweathermap.org/api/weathermaps">OpenWeather</a> | <a href="https://flightaware.com">FlightAware</a>'
 
 app.layout = html.Div(
     [
