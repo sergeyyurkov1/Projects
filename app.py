@@ -8,6 +8,8 @@ from dash_extensions.javascript import assign
 import dash_bootstrap_components as dbc
 import pandas as pd
 
+appid = "20ef87846f48421c60279f69fa1e85ca"
+
 def get_states(bounds: list) -> list:
     bounds_ = eval(json.dumps(bounds))
     
@@ -176,7 +178,7 @@ app.layout = html.Div(
                     # children=[dl.Tooltip(id="tooltip")]
                 ),
                 dl.WMSTileLayer(
-                    url="https://tile.openweathermap.org/map/{layers}/{z}/{x}/{y}.png?appid=20ef87846f48421c60279f69fa1e85ca",
+                    url="https://tile.openweathermap.org/map/{layers}/{z}/{x}/{y}.png?appid=" + appid,
                     layers="precipitation_new",
                     format="image/png",
                     transparent=True,
@@ -220,8 +222,7 @@ def set_overlay(n1, n2, n3, n4):
 
 @app.callback(
     Output("loading-output", "children"),
-    # Output("modal-centered", "is_open"),
-    [Input("data", "click_feature")] # hover_feature
+    Input("data", "click_feature") # hover_feature
 )
 def update_tooltip(feature):
     if feature is None:
@@ -285,7 +286,7 @@ def update_tooltip(feature):
                     [
                         dbc.Col(
                             [
-                                dbc.Row( html.Img(src=image_url_1) , justify="center", align="center"),
+                                dbc.Row( html.Img(src=image_url_1), justify="center", align="center" ),
                             ], align="center"
                         ),
                         dbc.Col(
@@ -298,7 +299,6 @@ def update_tooltip(feature):
                                     html.P(f"Altitude: {round(geo_altitude)} meters"),
                                     html.P(f"Squawk code: {squawk}"),
                                 ],
-                                # style={"whiteSpace": "pre-wrap", 'font-family': 'Courier, sans-serif'}
                             ),
                         ),
                     ], # className="g-0",
