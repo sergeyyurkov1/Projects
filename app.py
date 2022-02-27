@@ -126,6 +126,10 @@ attribution = '<a href="https://stadiamaps.com">Stadia Maps</a> | <a href="https
 
 app.layout = html.Div(
     [
+        html.Div(
+            html.Button('', id='info_button', n_clicks=0),
+            style={"display": "block", "width": "30px !important", "height": "30px !important", "position": "absolute", "z-index": "1000", "right": "calc(100vw - 42px)", "top": "calc(100vh - 54px)"}
+        ),
         dbc.Navbar(
             dbc.Container(
                 [
@@ -198,8 +202,47 @@ app.layout = html.Div(
             interval=10*1000, # in milliseconds
             n_intervals=0
         ),
+        dbc.Modal(
+            [
+                dbc.ModalHeader(
+                    dbc.ModalTitle(
+                        "About"
+                    ),
+                    close_button=True,
+                ),
+                dbc.ModalBody(
+                    dcc.Markdown(
+                    """
+                        **Automatic Dependent Surveillance Broadcast (ADS-B)** is a system by which an aircraft transmits it's flight data to be received by ground equipment and other aircraft in the area for better situational awareness and air traffic control in lieu of a traditional radar.
+                        
+                        This project uses information from publicly available databases moderated by aviation enthusiasts around the world; coverage is partial as some areas either restrict access to the data or don't have the necessary equipment to make such logging possible.
+                    """
+                    ),
+                    style={'font-family': 'monospace, sans-serif', "whiteSpace": "pre-wrap"},
+                ),
+                dbc.ModalFooter(
+                    dcc.Markdown("""Maintained by [Sergey 谢尔盖 Yurkov](https://www.linkedin.com/in/sergeyyurkov1)"""),
+                    style={'font-family': 'monospace, sans-serif', "whiteSpace": "pre-wrap"},
+                ),
+            ],
+            centered=True,
+            # size="sm",
+            is_open=False,
+            id="info_modal",
+            backdrop=False,
+            scrollable=True,
+        )
     ]
 )
+
+@app.callback(
+    Output("info_modal", "is_open"),
+    Input("info_button", "n_clicks"),
+)
+def show_info(n):
+    changed_id = [p['prop_id'] for p in callback_context.triggered][0]
+    if 'info_button' in changed_id:
+        return True
 
 @app.callback(
     Output("layer1", "layers"),
@@ -296,11 +339,11 @@ def update_tooltip(feature):
                         dbc.Col(
                             html.Div(
                                 [
-                                    html.P(f"In flight: {in_flight}"),
+                                    html.P(f"In the air: {in_flight}"),
+                                    html.P(f"Altitude: {round(geo_altitude)} meters"),
                                     html.P(f"Heading: {round(true_track)}°"),
                                     html.P(f"Speed: {round(velocity*3.6)} km/h"),
                                     html.P(f"Vertical speed: {round(vertical_rate)} m/s"),
-                                    html.P(f"Altitude: {round(geo_altitude)} meters"),
                                     html.P(f"Squawk code: {squawk}"),
                                 ],
                             ),
