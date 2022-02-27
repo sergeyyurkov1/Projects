@@ -292,10 +292,10 @@ def update_tooltip(feature):
                             html.Div(
                                 [
                                     html.P(f"In flight: {in_flight}"),
-                                    html.P(f"Heading: {true_track}°"),
-                                    html.P(f"Speed: {velocity} m/s"),
-                                    html.P(f"Vertical speed: {vertical_rate} m/s"),
-                                    html.P(f"Altitude: {geo_altitude} meters"),
+                                    html.P(f"Heading: {round(true_track)}°"),
+                                    html.P(f"Speed: {round(velocity*3.6)} km/h"),
+                                    html.P(f"Vertical speed: {round(vertical_rate)} m/s"),
+                                    html.P(f"Altitude: {round(geo_altitude)} meters"),
                                     html.P(f"Squawk code: {squawk}"),
                                 ],
                                 # style={"whiteSpace": "pre-wrap", 'font-family': 'Courier, sans-serif'}
