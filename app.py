@@ -215,13 +215,13 @@ app.layout = html.Div(
                     """
                         **Automatic Dependent Surveillance Broadcast (ADS-B)** is a system by which an aircraft transmits it's flight data to be received by ground equipment and other aircraft in the area for better situational awareness and air traffic control in lieu of a traditional radar.
                         
-                        This project uses information from publicly available databases moderated by aviation enthusiasts around the world; coverage is partial as some areas either restrict access to the data or don't have the necessary equipment to make such logging possible.
+                        This project uses information from publicly available databases maintained by aviation enthusiasts around the world; coverage is partial as some areas either have restricted access to the data or don't have the necessary equipment to make such logging possible.
                     """
                     ),
                     style={'font-family': 'monospace, sans-serif', "whiteSpace": "pre-wrap"},
                 ),
                 dbc.ModalFooter(
-                    dcc.Markdown("""Maintained by [Sergey 谢尔盖 Yurkov](https://www.linkedin.com/in/sergeyyurkov1)"""),
+                    dcc.Markdown("""Made by [Sergey 谢尔盖 Yurkov](https://www.linkedin.com/in/sergeyyurkov1)"""),
                     style={'font-family': 'monospace, sans-serif', "whiteSpace": "pre-wrap"},
                 ),
             ],
