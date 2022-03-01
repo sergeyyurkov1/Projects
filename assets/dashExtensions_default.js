@@ -5,6 +5,7 @@ window.dashExtensions = Object.assign({}, window.dashExtensions, {
                     iconUrl: 'assets/4.png',
                 });
                 const true_track = feature.properties.true_track;
+
                 return L.marker(latlng, {
                     icon: marker_,
                     rotationAngle: true_track
