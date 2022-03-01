@@ -2,14 +2,18 @@
     background-image: url("2.png");
     background-size: contain;
     background-color: transparent;
+    background-repeat: no-repeat;
+
     border: none;
     cursor: pointer;
     overflow: hidden;
     outline: none;
-    /* background-color: #ffffff; */
-    /* width: 50px !important;
-    height: 50px !important; */
+    
+    display: block;
+    position: absolute;
     width: 30px !important;
     height: 30px !important;
-    background-repeat: no-repeat;
+    top: calc(100vh - 54px);
+    right: calc(100vw - 42px);
+    z-index: 1000;
 }
