@@ -112,6 +112,8 @@ app = Dash(
         "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
         dbc.themes.BOOTSTRAP,
     ],
+    update_title=None,
+    title="ADS-B Tracker",
     prevent_initial_callbacks=True,
     meta_tags=[
         {
