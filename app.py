@@ -1,7 +1,7 @@
 import dash_leaflet as dl
 import dash_leaflet.express as dlx
 import json
-from dash import html, Input, Output, Dash, dcc, callback_context
+from dash import html, Input, Output, Dash, dcc, callback_context, callback
 import requests
 from dash_extensions.javascript import assign
 import dash_bootstrap_components as dbc
@@ -115,13 +115,14 @@ app = Dash(
     ],
     update_title=None,
     title="ADS-B Tracker",
-    prevent_initial_callbacks=True,
+    # prevent_initial_callbacks=True,
     meta_tags=[
         {
             "name": "viewport",
             "content": "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no",
         }
     ],
+    suppress_callback_exceptions=True
 )
 server = app.server
 
@@ -131,131 +132,145 @@ url = "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png
 
 attribution = 'Tiles from <a href="https://stadiamaps.com">Stadia Maps</a> | Data from <a href="https://openskynetwork.github.io/opensky-api/rest.html">OpenSky</a>, <a href="https://openweathermap.org/api/weathermaps">OpenWeather</a>, <a href="https://flightaware.com">FlightAware</a>'
 
-app.layout = html.Div(
-    [
-        html.Div(
-            html.Button("", id="info_button", n_clicks=0),
-        ),
-        dbc.Navbar(
-            dbc.Container(
-                [
-                    html.A(
-                        dbc.Row(
-                            [
-                                dbc.Col(html.Img(src=LOGO, height="30px")),
-                                dbc.Col(
-                                    dbc.NavbarBrand("ADS-B Tracker", className="ms-2")
-                                ),
-                            ],
-                            align="center",
-                            className="g-0",
+navbar = dbc.Navbar(
+    dbc.Container(
+        [
+            html.A(
+                dbc.Row(
+                    [
+                        dbc.Col(html.Img(src=LOGO, height="30px")),
+                        dbc.Col(
+                            dbc.NavbarBrand("ADS-B Tracker", className="ms-2")
                         ),
-                        href="#",
-                        style={"textDecoration": "none"},
-                    ),
-                    dbc.DropdownMenu(
-                        [
-                            dbc.DropdownMenuItem(
-                                "Precipitation", id="precipitation", n_clicks=0
-                            ),
-                            dbc.DropdownMenuItem(
-                                "Wind speed", id="wind_speed", n_clicks=0
-                            ),
-                            dbc.DropdownMenuItem("Clouds", id="clouds", n_clicks=0),
-                            dbc.DropdownMenuItem("None", id="none", n_clicks=0),
-                        ],
-                        label="Weather overlay",
-                        menu_variant="dark",
-                    ),
-                ]
+                    ],
+                    align="center",
+                    className="g-0",
+                ),
+                # href="#",
+                style={"textDecoration": "none"},
             ),
-            color="dark",
-            dark=True,
-        ),
-        dl.Map(
-            children=[
-                dl.LocateControl(
-                    options={"locateOptions": {"enableHighAccuracy": False}}
-                ),
-                dl.TileLayer(url=url, maxZoom=15, attribution=attribution),
-                dl.GeoJSON(
-                    id="data",
-                    options=dict(pointToLayer=point_to_layer),
-                    cluster=True,
-                    zoomToBoundsOnClick=True,
-                    clusterToLayer=cluster_to_layer,
-                ),
-                dl.WMSTileLayer(
-                    url="https://tile.openweathermap.org/map/{layers}/{z}/{x}/{y}.png?appid="
-                    + appid,
-                    layers="precipitation_new",
-                    format="image/png",
-                    transparent=True,
-                    updateInterval=10_000,
-                    extraProps={"key": generate_key()},
-                    id="layer1",
-                ),
-            ],
-            center=(31, 121),
-            zoom=5,
-            preferCanvas=True,
-            style={
-                "width": "100%",
-                "height": "-webkit-calc(100vh - 54px)",
-                "height": "-moz-calc(100vh - 54px)",
-                "height": "calc(100vh - 54px)",
-            },
-            id="map",
-        ),
-        dcc.Loading(
-            html.Div(id="loading"),
-            type="default",
-            fullscreen=True,
-            style={"z-index": "1000", "background-color": "rgba(0, 0, 0, 0.5)"}, # important
-        ),
-        dcc.Interval(
-            id="interval",
-            interval=10 * 1000, # in milliseconds
-            n_intervals=0,
-        ),
-        dbc.Modal(
-            [
-                dbc.ModalHeader(
-                    dbc.ModalTitle("About"),
-                    close_button=True,
-                ),
-                dbc.ModalBody(
-                    dcc.Markdown(
-                        """
-                        **Automatic Dependent Surveillance Broadcast (ADS-B)** is a system by which an aircraft transmits it's flight data to be received by ground equipment and other aircraft in the area for better situational awareness and air traffic control in lieu of a traditional radar.
-                        
-                        This project uses information from publicly available databases maintained by aviation enthusiasts around the world; coverage is partial as some areas either have restricted access to the data or don't have the necessary equipment to make such logging possible.
-                    """
-                    ),
-                    style={
-                        "font-family": "monospace, sans-serif",
-                        "whiteSpace": "pre-wrap",
-                    },
-                ),
-                dbc.ModalFooter(
-                    dcc.Markdown(
-                        """Made by [Sergey 谢尔盖 Yurkov](https://www.linkedin.com/in/sergeyyurkov1)"""
-                    ),
-                    style={
-                        "font-family": "monospace, sans-serif",
-                        "whiteSpace": "pre-wrap",
-                    },
-                ),
-            ],
-            is_open=False,
-            centered=True,
-            scrollable=True,
-            id="info_modal",
-        ),
-    ]
-)
+        ]
+    ),
+    color="dark",
+    dark=True,
+),
 
-@app.callback(
+content = html.Div(id="content")
+
+layout_ = [
+    dl.Map(
+        children=[
+            dl.LocateControl(
+                options={"locateOptions": {"enableHighAccuracy": False}}
+            ),
+            dl.TileLayer(url=url, maxZoom=25, attribution=attribution),
+            dl.GeoJSON(
+                id="data",
+                options=dict(pointToLayer=point_to_layer),
+                cluster=True,
+                zoomToBoundsOnClick=True,
+                clusterToLayer=cluster_to_layer,
+            ),
+            dl.WMSTileLayer(
+                url="https://tile.openweathermap.org/map/{layers}/{z}/{x}/{y}.png?appid="
+                + appid,
+                layers="precipitation_new",
+                format="image/png",
+                transparent=True,
+                updateInterval=10_000,
+                extraProps={"key": generate_key()},
+                id="layer1",
+            ),
+        ],
+        center=(31, 121),
+        zoom=5,
+        preferCanvas=True,
+        style={
+            "width": "100%",
+            "height": "-webkit-calc(100vh - 46px)",
+            "height": "-moz-calc(100vh - 46px)",
+            "height": "calc(100vh - 46px)",
+        },
+        id="map",
+    ),
+    dcc.Loading(
+        html.Div(id="loading"),
+        type="default",
+        fullscreen=True,
+        style={"z-index": "1000", "background-color": "rgba(0, 0, 0, 0.5)"}, # important
+    ),
+    dcc.Interval(
+        id="interval",
+        interval=10 * 1000, # in milliseconds
+        n_intervals=0,
+    ),
+    dbc.Modal(
+        [
+            dbc.ModalHeader(
+                dbc.ModalTitle("About"),
+                close_button=True,
+            ),
+            dbc.ModalBody(
+                dcc.Markdown(
+                    """
+                    **Automatic Dependent Surveillance Broadcast (ADS-B)** is a system by which an aircraft transmits it's flight data to be received by ground equipment and other aircraft in the area for better situational awareness and air traffic control in lieu of a traditional radar.
+                    
+                    This project uses information from publicly available databases maintained by aviation enthusiasts around the world; coverage is partial as some areas either have restricted access to the data or don't have the necessary equipment to make such logging possible.
+                """
+                ),
+                style={
+                    "font-family": "monospace, sans-serif",
+                    "whiteSpace": "pre-wrap",
+                },
+            ),
+            dbc.ModalFooter(
+                dcc.Markdown(
+                    """Made by [Sergey 谢尔盖 Yurkov](https://www.linkedin.com/in/sergeyyurkov1)"""
+                ),
+                style={
+                    "font-family": "monospace, sans-serif",
+                    "whiteSpace": "pre-wrap",
+                },
+            ),
+        ],
+        is_open=False,
+        centered=True,
+        scrollable=True,
+        id="info_modal",
+    ),
+    dbc.DropdownMenu(
+        [
+            dbc.DropdownMenuItem(
+                "Precipitation", id="precipitation", n_clicks=0
+            ),
+            dbc.DropdownMenuItem(
+                "Wind speed", id="wind_speed", n_clicks=0
+            ),
+            dbc.DropdownMenuItem("Clouds", id="clouds", n_clicks=0),
+            dbc.DropdownMenuItem("None", id="none", n_clicks=0),
+        ],
+        label="Weather overlay",
+        menu_variant="dark",
+        id="ddm",
+    ),
+    html.Div(
+        html.Button("", id="info_button", n_clicks=0),
+    ),
+]
+
+app.layout = html.Div([dcc.Location(id="url"), *navbar, content])
+
+@callback(
+    Output("content", "children"),
+    Input("url", "pathname"),
+)
+def render_page_content(pathname):
+    if pathname == "/":
+        return layout_
+    return "404"
+
+
+@callback(
     Output("info_modal", "is_open"),
     Input("info_button", "n_clicks"),
 )
@@ -264,7 +279,7 @@ def show_info(n):
     if "info_button" in changed_id:
         return True
 
-@app.callback(
+@callback(
     Output("layer1", "layers"),
     Output("layer1", "extraProps"),
     Input("precipitation", "n_clicks"),
@@ -283,7 +298,7 @@ def set_overlay(n1, n2, n3, n4):
     else:
         return "none", {"key": generate_key()}
 
-@app.callback(
+@callback(
     Output("loading", "children"),
     Input("data", "click_feature"), # alt: hover_feature
 )

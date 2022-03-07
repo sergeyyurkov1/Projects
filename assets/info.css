@@ -13,7 +13,7 @@
     position: absolute;
     width: 30px !important;
     height: 30px !important;
-    top: calc(100vh - 54px);
+    top: calc(100vh - 74px);
     right: calc(100vw - 42px);
     z-index: 1000;
 }
