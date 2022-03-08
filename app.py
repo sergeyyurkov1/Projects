@@ -26,7 +26,6 @@ server = app.server
 
 LOGO = "assets/0.png"
 
-
 navbar = (
     dbc.Navbar(
         dbc.Container(
@@ -189,17 +188,17 @@ navbar = (
 
 content = html.Div(id="content")
 
-footer = html.Footer(
-    [html.Div("", className="container")],
-    className="footer bg-primary",  # bg-info
-    style={
-        "position": "absolute",
-        "bottom": "0",
-        "width": "100%",
-        "height": "1px",
-        "z-index": "1100",
-    },
-)
+# footer = html.Footer(
+#     [html.Div("", className="container")],
+#     className="footer bg-primary",  # bg-info
+#     style={
+#         "position": "absolute",
+#         "bottom": "0",
+#         "width": "100%",
+#         "height": "1px",
+#         "z-index": "1100",
+#     },
+# )
 
 app.layout = html.Div([dcc.Location(id="url"), *navbar, content])  # , footer
 

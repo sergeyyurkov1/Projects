@@ -117,7 +117,6 @@ url = "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png
 
 attribution = 'Tiles from <a href="https://stadiamaps.com">Stadia Maps</a> | Data from <a href="https://openskynetwork.github.io/opensky-api/rest.html">OpenSky</a>, <a href="https://openweathermap.org/api/weathermaps">OpenWeather</a>, <a href="https://flightaware.com">FlightAware</a>'
 
-
 layout = [
     dl.Map(
         children=[
@@ -183,15 +182,6 @@ layout = [
                     "whiteSpace": "pre-wrap",
                 },
             ),
-            # dbc.ModalFooter(
-            #     dcc.Markdown(
-            #         """Made by [Sergey 谢尔盖 Yurkov](https://www.linkedin.com/in/sergeyyurkov1)"""
-            #     ),
-            #     style={
-            #         "font-family": "monospace, sans-serif",
-            #         "whiteSpace": "pre-wrap",
-            #     },
-            # ),
         ],
         is_open=False,
         centered=True,
