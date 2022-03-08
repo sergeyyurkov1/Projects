@@ -1,8 +1,12 @@
 #ddm {
-    display: block;
+    /* display: block; */
     position: absolute;
-    top: calc(58px + 38px);
+    /* top: calc(64px + 38px); */
+    top: calc(64px + 62px);
     left: calc(100vw - 12px);
     transform: translate(-100%, -100%);
     z-index: 900;
+    background-color: rgba(33, 37, 41, 0.9);
+    padding: 6px;
+    border-radius: 5px;
 }
