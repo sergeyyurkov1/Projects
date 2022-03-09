@@ -283,7 +283,7 @@ _home = html.Div(
                         sc_disabled=True,
                     ),
                     get_card(
-                        src="https://via.placeholder.com/400x300?text=Image+coming+soon",
+                        src="assets/2.png",
                         title="Vaccination Goals",
                         desc="Visualizes vaccination progress, past and future milestones",
                         href="https://sy-projects-st.herokuapp.com/?app=Vaccination+Goal+Visualizer",
