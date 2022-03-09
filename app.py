@@ -12,7 +12,7 @@ app = Dash(
         dbc.icons.BOOTSTRAP,
     ],
     update_title=None,
-    title="Apps",
+    title="Apps | Sergey Yurkov",
     # prevent_initial_callbacks=True,
     meta_tags=[
         {

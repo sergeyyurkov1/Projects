@@ -14,7 +14,7 @@
     height: 52px !important;
 }
 
-.btn:focus, .btn:active {
+.btn:focus, .btn:active, .btn-close:focus, .btn-close:active {
     outline: none !important;
     box-shadow: none !important;
 }

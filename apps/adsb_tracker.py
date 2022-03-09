@@ -120,7 +120,7 @@ attribution = 'Tiles from <a href="https://stadiamaps.com">Stadia Maps</a> | Dat
 layout = [
     dl.Map(
         children=[
-            dl.LocateControl(options={"locateOptions": {"enableHighAccuracy": False}}),
+            # dl.LocateControl(options={"locateOptions": {"enableHighAccuracy": False}}),
             dl.TileLayer(url=url, maxZoom=25, attribution=attribution),
             dl.GeoJSON(
                 id="data",
