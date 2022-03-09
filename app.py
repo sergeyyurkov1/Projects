@@ -259,27 +259,30 @@ def get_card(src, title, desc, href, sc_href, sc_disabled):
 
 _home = html.Div(
     dbc.Col(
-        dbc.Row(
-            [
-                get_card(
-                    src="assets/images/01.jpg",
-                    title="ADS-B Tracker",
-                    desc="Simple flight tracker and weather radar",
-                    href="/adsb_tracker",
-                    sc_href="/",
-                    sc_disabled=True,
-                ),
-                get_card(
-                    src="https://via.placeholder.com/400x300?text=Image+coming+soon",
-                    title="Vaccination Goals",
-                    desc="Visualizes vaccination progress, past and future milestones",
-                    href="https://sy-projects-st.herokuapp.com/?app=Vaccination+Goal+Visualizer",
-                    sc_href="https://github.com/sergeyyurkov1/sy-projects-st/blob/main/apps/vaccination_goals.py",
-                    sc_disabled=False,
-                ),
-            ],
-            justify="center",
-        )
+        [
+            dbc.Row(
+                [
+                    get_card(
+                        src="assets/images/01.jpg",
+                        title="ADS-B Tracker",
+                        desc="Simple flight tracker and weather radar",
+                        href="/adsb_tracker",
+                        sc_href="/",
+                        sc_disabled=True,
+                    ),
+                    get_card(
+                        src="https://via.placeholder.com/400x300?text=Image+coming+soon",
+                        title="Vaccination Goals",
+                        desc="Visualizes vaccination progress, past and future milestones",
+                        href="https://sy-projects-st.herokuapp.com/?app=Vaccination+Goal+Visualizer",
+                        sc_href="https://github.com/sergeyyurkov1/sy-projects-st/blob/main/apps/vaccination_goals.py",
+                        sc_disabled=False,
+                    ),
+                ],
+                justify="center",
+            ),
+            dbc.Row("", style={"height": "40px"}),
+        ]
     )
 )
 

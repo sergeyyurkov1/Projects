@@ -81,5 +81,5 @@ body {
 }
 
 div.bg-light:nth-last-child(1) {
-    margin-bottom: 40px;
+    /* margin-bottom: 40px !important; */
 }
