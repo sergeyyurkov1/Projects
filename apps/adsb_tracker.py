@@ -309,13 +309,13 @@ def update_tooltip(feature):
     if aircraft_data == False:
         airline = ""
         aircraft_type = ""
-        image_url_1 = "https://via.placeholder.com/300x200?text=Image+not+found"
+        image_url_1 = "assets/2.png"
     else:
         airline = aircraft_data["airline"]
         aircraft_type = aircraft_data["aircraft_type"]
 
         if len(aircraft_data["image_urls"]) == 0:
-            image_url_1 = "https://via.placeholder.com/300x200?text=Image+not+found"
+            image_url_1 = "assets/2.png"
         else:
             import random
 
