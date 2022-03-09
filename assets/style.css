@@ -22,6 +22,9 @@
 html,
 body {
     height: 100%;
+    max-width: 100% !important;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 body {
@@ -78,8 +81,4 @@ body {
     width: 100px !important;
     height: 100px !important;
     background-repeat: no-repeat;
-}
-
-div.bg-light:nth-last-child(1) {
-    /* margin-bottom: 40px !important; */
 }

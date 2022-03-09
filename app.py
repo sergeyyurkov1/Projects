@@ -261,7 +261,7 @@ def get_card(src, title, desc, href, sc_href, sc_disabled):
                         ]
                     ),
                 ],
-                className="d-grid gap-2",
+                className="d-grid",
             ),
         ],
         style={"width": "18rem", "padding": "10px", "margin": "40px 20px 0px 20px"},
