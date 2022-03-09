@@ -47,6 +47,18 @@ navbar = (
                         dbc.DropdownMenuItem("Links", header=True),
                         dbc.DropdownMenuItem(
                             html.A(
+                                "Projects",
+                                href="/",
+                                style={
+                                    "padding-left": "10px",
+                                    "padding-right": "10px",
+                                    "textDecoration": "none",
+                                },
+                                className="text-light",
+                            )
+                        ),
+                        dbc.DropdownMenuItem(
+                            html.A(
                                 "Blog",
                                 href="https://sergeyyurkov1.github.io/blog/",
                                 style={
@@ -59,57 +71,57 @@ navbar = (
                             )
                         ),
                         dbc.DropdownMenuItem(divider=True),
-                        dbc.DropdownMenuItem("Projects", header=True),
-                        dbc.DropdownMenuItem(
-                            dbc.NavItem(
-                                [
-                                    dcc.Link(
-                                        "ADS-B Tracker",
-                                        href="/adsb_tracker",
-                                        className="text-light",
-                                        style={
-                                            "padding-left": "10px",
-                                            "padding-right": "10px",
-                                            "textDecoration": "none",
-                                        },
-                                    ),
-                                    html.A(
-                                        html.I(className="bi bi-github"),
-                                        href="/",
-                                        target="_blank",
-                                        className="text-light",
-                                        style={
-                                            "textDecoration": "none",
-                                        },
-                                    ),
-                                ],
-                            ),
-                            style={"display": "inline !important"},
-                        ),
-                        dbc.DropdownMenuItem(
-                            [
-                                html.A(
-                                    "Vaccination Goals",
-                                    href="https://sy-projects-st.herokuapp.com/?app=Vaccination+Goal+Visualizer",
-                                    className="text-light",
-                                    style={
-                                        "padding-left": "10px",
-                                        "padding-right": "10px",
-                                        "textDecoration": "none",
-                                    },
-                                    target="_blank",
-                                ),
-                                html.A(
-                                    html.I(className="bi bi-github"),
-                                    href="/",
-                                    target="_blank",
-                                    className="text-light",
-                                    style={
-                                        "textDecoration": "none",
-                                    },
-                                ),
-                            ],
-                        ),
+                        # dbc.DropdownMenuItem("Projects", header=True),
+                        # dbc.DropdownMenuItem(
+                        #     dbc.NavItem(
+                        #         [
+                        #             dcc.Link(
+                        #                 "ADS-B Tracker",
+                        #                 href="/adsb_tracker",
+                        #                 className="text-light",
+                        #                 style={
+                        #                     "padding-left": "10px",
+                        #                     "padding-right": "10px",
+                        #                     "textDecoration": "none",
+                        #                 },
+                        #             ),
+                        #             html.A(
+                        #                 html.I(className="bi bi-github"),
+                        #                 href="/",
+                        #                 target="_blank",
+                        #                 className="text-light",
+                        #                 style={
+                        #                     "textDecoration": "none",
+                        #                 },
+                        #             ),
+                        #         ],
+                        #     ),
+                        #     style={"display": "inline !important"},
+                        # ),
+                        # dbc.DropdownMenuItem(
+                        #     [
+                        #         html.A(
+                        #             "Vaccination Goals",
+                        #             href="https://sy-projects-st.herokuapp.com/?app=Vaccination+Goal+Visualizer",
+                        #             className="text-light",
+                        #             style={
+                        #                 "padding-left": "10px",
+                        #                 "padding-right": "10px",
+                        #                 "textDecoration": "none",
+                        #             },
+                        #             target="_blank",
+                        #         ),
+                        #         html.A(
+                        #             html.I(className="bi bi-github"),
+                        #             href="/",
+                        #             target="_blank",
+                        #             className="text-light",
+                        #             style={
+                        #                 "textDecoration": "none",
+                        #             },
+                        #         ),
+                        #     ],
+                        # ),
                         dbc.DropdownMenuItem("Other", header=True),
                         dbc.DropdownMenuItem(
                             [
