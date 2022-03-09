@@ -224,7 +224,7 @@ _404 = html.Div(
     Input("url", "pathname"),
 )
 def render_page_content(pathname):
-    if pathname == "/adsb_tracker":
+    if pathname == "/adsb_tracker" or pathname == "/":
         return adsb_tracker.layout, adsb_tracker.TITLE
     return _404, ""
 
