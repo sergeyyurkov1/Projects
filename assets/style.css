@@ -79,3 +79,7 @@ body {
     height: 100px !important;
     background-repeat: no-repeat;
 }
+
+div.bg-light:nth-last-child(1) {
+    margin-bottom: 40px;
+}
