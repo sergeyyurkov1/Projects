@@ -148,11 +148,18 @@ navbar = (
         ),
         color="dark",
         dark=True,
-        style={"border-bottom": "1px solid #0d6efd"},
+        style={
+            "border-bottom": "1px solid #0d6efd",
+            # "top": "0",
+            # "left": "0",
+            # "position": "absolute",
+            # "width": "100%",
+        },
+        className="fixed-top",
     ),
 )
 
-content = html.Div(id="content")
+content = html.Div(id="content", style={"margin-top": "53px"})
 
 footer = html.Footer(
     [
@@ -172,8 +179,9 @@ footer = html.Footer(
     className="footer bg-primary",  # bg-info, bg-primary
     style={
         # "background": "transparent",
-        "position": "absolute",
-        # "position": "relative",
+        # "position": "absolute",
+        "margin-top": "auto",
+        "position": "fixed",
         "bottom": "0",
         "width": "100%",
         "height": "40px",
@@ -273,6 +281,7 @@ _home = (
             footer,
         ],
         id="particles-js",
+        style={"height": "100%"},
     ),
 )
 

@@ -145,7 +145,11 @@ layout = [
         preferCanvas=True,
         style={
             "width": "100%",
-            "height": "calc(100vh - 54px + 1px)",
+            # "height": "calc(100vh - 54px + 1px)",
+            "height": "calc(100vh - 53px)",
+            # "margin-top": "53px",
+            # "z-index": "901",
+            # "height": "100%",
         },
         id="map",
     ),
