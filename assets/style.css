@@ -34,8 +34,8 @@ body {
 
 #ddm {
     position: absolute;
-    /* top: calc(64px + 38px); */
-    top: calc(64px + 62px);
+    top: calc(var(--nav-height) + 10px + 64px);
+    /* top: calc(64px + 62px); */
     left: calc(100vw - 12px);
     transform: translate(-100%, -100%);
     z-index: 900;
@@ -95,4 +95,21 @@ body {
 
 :root {
     --app-height: 100%;
+    --nav-height: 53px;
+}
+
+@media only screen and (max-width: 338px) {
+    #ddm-button, #aircraft-image {
+        display: none;
+    }
+}
+@media only screen and (max-width: 300px) {
+    #ddm {
+        display: none;
+    }
+}
+@media only screen and (max-width: 208px) {
+    #nvb, .leaflet-right {
+        display: none;
+    }
 }

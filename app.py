@@ -135,7 +135,7 @@ navbar = (
                     label="Navigation",
                     menu_variant="dark",
                     align_end=True,
-                    # id="ddm",
+                    id="ddm-button",
                     color="primary",
                     toggle_style={
                         "textTransform": "uppercase",
@@ -156,10 +156,11 @@ navbar = (
             # "width": "100%",
         },
         className="fixed-top",
+        id="navbar",
     ),
 )
 
-content = html.Div(id="content", style={"margin-top": "53px"})
+content = html.Div(id="content", style={"margin-top": "var(--nav-height)"})
 
 footer = html.Footer(
     [
@@ -265,7 +266,7 @@ _home = (
                                 sc_disabled=True,
                             ),
                             get_card(
-                                src="assets/2.png",
+                                src="assets/3.png",
                                 title="Vaccination Goals",
                                 desc="Visualizes vaccination progress, past and future milestones",
                                 href="https://sy-projects-st.herokuapp.com/?app=Vaccination+Goal+Visualizer",

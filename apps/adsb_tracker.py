@@ -145,12 +145,8 @@ layout = [
         preferCanvas=True,
         style={
             "width": "100%",
-            # "height": "calc(100vh - 54px + 1px)",
             # "height": "calc(100vh - 53px)",
-            "height": "calc(var(--app-height) - 53px)",
-            # "margin-top": "53px",
-            # "z-index": "901",
-            # "height": "100%",
+            "height": "calc(var(--app-height) - var(--nav-height))",
         },
         id="map",
     ),
@@ -163,7 +159,6 @@ layout = [
             "background-color": "rgba(0, 0, 0, 0.5)",
             "top": "calc(100% - var(--app-height))",
             "height": "var(--app-height)",
-            # "transform": "translate(-100%, -100%)"
         },  # important
     ),
     dcc.Interval(
@@ -317,13 +312,13 @@ def update_tooltip(feature):
     if aircraft_data == False:
         airline = ""
         aircraft_type = ""
-        image_url_1 = "assets/2.png"
+        image_url_1 = "assets/3.png"
     else:
         airline = aircraft_data["airline"]
         aircraft_type = aircraft_data["aircraft_type"]
 
         if len(aircraft_data["image_urls"]) == 0:
-            image_url_1 = "assets/2.png"
+            image_url_1 = "assets/3.png"
         else:
             import random
 
@@ -347,16 +342,6 @@ def update_tooltip(feature):
                     dbc.Row(
                         [
                             dbc.Col(
-                                [
-                                    dbc.Row(
-                                        html.Img(src=image_url_1),
-                                        justify="center",
-                                        align="center",
-                                    ),
-                                ],
-                                # align="center",
-                            ),
-                            dbc.Col(
                                 html.Div(
                                     [
                                         html.P(f"In flight: {in_flight}".upper()),
@@ -369,6 +354,17 @@ def update_tooltip(feature):
                                         html.P(f"Squawk code: {squawk}".upper()),
                                     ],
                                 ),
+                            ),
+                            dbc.Col(
+                                [
+                                    dbc.Row(
+                                        html.Img(src=image_url_1),
+                                        justify="center",
+                                        align="center",
+                                    ),
+                                ],
+                                # align="center",
+                                id="aircraft-image"
                             ),
                         ],
                     ),
