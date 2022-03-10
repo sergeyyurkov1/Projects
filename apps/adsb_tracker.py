@@ -161,6 +161,9 @@ layout = [
         style={
             "z-index": "1000",
             "background-color": "rgba(0, 0, 0, 0.5)",
+            "top": "calc(100% - var(--app-height))",
+            "height": "var(--app-height)",
+            # "transform": "translate(-100%, -100%)"
         },  # important
     ),
     dcc.Interval(
