@@ -1,11 +1,16 @@
 from dash import html, Input, Output, State, Dash, dcc, callback  # callback_context
 import dash_bootstrap_components as dbc
 
+# import grasia_dash_components as gdc
+
 from apps import adsb_tracker
+
+external_scripts = ["https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"]
 
 # --- App start ------------------------------------------------------------------------------------------
 app = Dash(
     __name__,
+    external_scripts=external_scripts,
     external_stylesheets=[
         dbc.themes.BOOTSTRAP,
         "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
@@ -71,57 +76,6 @@ navbar = (
                             )
                         ),
                         dbc.DropdownMenuItem(divider=True),
-                        # dbc.DropdownMenuItem("Projects", header=True),
-                        # dbc.DropdownMenuItem(
-                        #     dbc.NavItem(
-                        #         [
-                        #             dcc.Link(
-                        #                 "ADS-B Tracker",
-                        #                 href="/adsb_tracker",
-                        #                 className="text-light",
-                        #                 style={
-                        #                     "padding-left": "10px",
-                        #                     "padding-right": "10px",
-                        #                     "textDecoration": "none",
-                        #                 },
-                        #             ),
-                        #             html.A(
-                        #                 html.I(className="bi bi-github"),
-                        #                 href="/",
-                        #                 target="_blank",
-                        #                 className="text-light",
-                        #                 style={
-                        #                     "textDecoration": "none",
-                        #                 },
-                        #             ),
-                        #         ],
-                        #     ),
-                        #     style={"display": "inline !important"},
-                        # ),
-                        # dbc.DropdownMenuItem(
-                        #     [
-                        #         html.A(
-                        #             "Vaccination Goals",
-                        #             href="https://sy-projects-st.herokuapp.com/?app=Vaccination+Goal+Visualizer",
-                        #             className="text-light",
-                        #             style={
-                        #                 "padding-left": "10px",
-                        #                 "padding-right": "10px",
-                        #                 "textDecoration": "none",
-                        #             },
-                        #             target="_blank",
-                        #         ),
-                        #         html.A(
-                        #             html.I(className="bi bi-github"),
-                        #             href="/",
-                        #             target="_blank",
-                        #             className="text-light",
-                        #             style={
-                        #                 "textDecoration": "none",
-                        #             },
-                        #         ),
-                        #     ],
-                        # ),
                         dbc.DropdownMenuItem("Other", header=True),
                         dbc.DropdownMenuItem(
                             [
@@ -212,7 +166,9 @@ content = html.Div(id="content")
 #     },
 # )
 
-app.layout = html.Div([dcc.Location(id="url"), *navbar, content])  # , footer
+app.layout = html.Div(
+    [dcc.Location(id="url"), *navbar, content], id="layout"
+)  # , footer
 
 
 def get_card(src, title, desc, href, sc_href, sc_disabled):
@@ -269,33 +225,36 @@ def get_card(src, title, desc, href, sc_href, sc_disabled):
     )
 
 
-_home = html.Div(
-    dbc.Col(
-        [
-            dbc.Row(
-                [
-                    get_card(
-                        src="assets/images/01.jpg",
-                        title="ADS-B Tracker",
-                        desc="Simple flight tracker and weather radar",
-                        href="/adsb_tracker",
-                        sc_href="/",
-                        sc_disabled=True,
-                    ),
-                    get_card(
-                        src="assets/2.png",
-                        title="Vaccination Goals",
-                        desc="Visualizes vaccination progress, past and future milestones",
-                        href="https://sy-projects-st.herokuapp.com/?app=Vaccination+Goal+Visualizer",
-                        sc_href="https://github.com/sergeyyurkov1/sy-projects-st/blob/main/apps/vaccination_goals.py",
-                        sc_disabled=False,
-                    ),
-                ],
-                justify="center",
-            ),
-            dbc.Row("", style={"height": "40px"}),
-        ]
-    )
+_home = (
+    html.Div(
+        dbc.Col(
+            [
+                dbc.Row(
+                    [
+                        get_card(
+                            src="assets/images/01.jpg",
+                            title="ADS-B Tracker",
+                            desc="Simple flight tracker and weather radar",
+                            href="/adsb_tracker",
+                            sc_href="/",
+                            sc_disabled=True,
+                        ),
+                        get_card(
+                            src="assets/2.png",
+                            title="Vaccination Goals",
+                            desc="Visualizes vaccination progress, past and future milestones",
+                            href="https://sy-projects-st.herokuapp.com/?app=Vaccination+Goal+Visualizer",
+                            sc_href="https://github.com/sergeyyurkov1/sy-projects-st/blob/main/apps/vaccination_goals.py",
+                            sc_disabled=False,
+                        ),
+                    ],
+                    justify="center",
+                ),
+                dbc.Row("", style={"height": "40px"}),
+            ]
+        ),
+        id="particles-js",
+    ),
 )
 
 _404 = html.Div(

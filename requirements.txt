@@ -6,3 +6,4 @@ dash
 dash-extensions
 dash-bootstrap-components
 requests
+grasia-dash-components
