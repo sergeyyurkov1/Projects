@@ -160,19 +160,24 @@ footer = html.Footer(
             html.P(
                 "Background made with Particles.js",
                 # className="text-muted",
-                style={"font-size": "12px", "color": "#b3b3b3"},
+                style={
+                    "font-size": "12px",
+                    "color": "white",
+                    "display": "inline-block",
+                },
             ),
             className="container",
         )
     ],
-    className="footer",  # bg-info, bg-primary
+    className="footer bg-primary",  # bg-info, bg-primary
     style={
-        "background": "transparent",
-        # "position": "absolute",
+        # "background": "transparent",
+        "position": "absolute",
+        # "position": "relative",
         "bottom": "0",
         "width": "100%",
         "height": "40px",
-        "z-index": "-1",
+        "z-index": "1100",
         "text-align": "right",
     },
 )
@@ -262,7 +267,7 @@ _home = (
                         ],
                         justify="center",
                     ),
-                    dbc.Row("", style={"height": "40px"}),
+                    dbc.Row("", style={"height": "80px"}),
                 ]
             ),
             footer,
