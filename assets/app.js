@@ -9,7 +9,7 @@ const callback = function (mutationsList, observer) {
             console.log(id_);
             if (id_ == "particles-js") {
                 particlesJS.load("particles-js", "assets/particlesjs-config.json", function () {
-                    console.log("particles.js loaded!");
+                    console.log("Particles.js loaded!");
                 });
             }
         }
