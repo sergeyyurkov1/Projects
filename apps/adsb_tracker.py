@@ -146,7 +146,8 @@ layout = [
         style={
             "width": "100%",
             # "height": "calc(100vh - 54px + 1px)",
-            "height": "calc(100vh - 53px)",
+            # "height": "calc(100vh - 53px)",
+            "height": "calc(var(--app-height) - 53px)",
             # "margin-top": "53px",
             # "z-index": "901",
             # "height": "100%",

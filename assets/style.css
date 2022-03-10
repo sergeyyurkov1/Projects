@@ -92,3 +92,7 @@ body {
     right: 0;
     z-index: -1;
 }
+
+:root {
+    --app-height: 100%;
+}
