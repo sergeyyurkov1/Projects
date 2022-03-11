@@ -189,6 +189,7 @@ footer = html.Footer(
         "z-index": "1100",
         "text-align": "right",
     },
+    id="footer",
 )
 
 app.layout = html.Div(
