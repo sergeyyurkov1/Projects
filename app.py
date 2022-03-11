@@ -166,7 +166,17 @@ footer = html.Footer(
     [
         html.Div(
             html.P(
-                ["built and maintained by Sergey Yurkov", html.Br(), "background made with Particles.js"],
+                [
+                    "built and maintained by ",
+                    html.A(
+                        "Sergey Yurkov",
+                        href="https://www.linkedin.com/in/sergeyyurkov1",
+                        style={"font-size": "12px", "color": "white"},
+                        target="_blank",
+                    ),
+                    html.Br(),
+                    "background made with Particles.js",
+                ],
                 # className="text-muted",
                 style={
                     "font-size": "12px",
@@ -186,6 +196,7 @@ footer = html.Footer(
         "bottom": "0",
         "width": "100%",
         "height": "40px",
+        "border-top": "1px solid white",
         "z-index": "1100",
         "text-align": "right",
     },
