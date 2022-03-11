@@ -267,7 +267,7 @@ _home = (
                                 sc_disabled=True,
                             ),
                             get_card(
-                                src="assets/3.png",
+                                src="assets/images/02.jpg",
                                 title="Vaccination Goals",
                                 desc="Visualizes vaccination progress, past and future milestones",
                                 href="https://sy-projects-st.herokuapp.com/?app=Vaccination+Goal+Visualizer",
