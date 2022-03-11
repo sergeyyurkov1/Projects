@@ -107,7 +107,7 @@ navbar = (
                                 ),
                                 html.A(
                                     html.I(className="bi bi-github"),
-                                    href="/",
+                                    href="https://github.com/sergeyyurkov1/sy-static-st/tree/main/static/bubble_pop",
                                     target="_blank",
                                     className="text-light",
                                     style={
@@ -166,7 +166,7 @@ footer = html.Footer(
     [
         html.Div(
             html.P(
-                "Background made with Particles.js",
+                ["built and maintained by Sergey Yurkov", html.Br(), "background made with Particles.js"],
                 # className="text-muted",
                 style={
                     "font-size": "12px",
