@@ -181,7 +181,7 @@ footer = html.Footer(
                 style={
                     "font-size": "12px",
                     "color": "white",
-                    "display": "inline-block",
+                    # "display": "inline-block",
                 },
             ),
             className="container",
@@ -191,7 +191,7 @@ footer = html.Footer(
     style={
         # "background": "transparent",
         # "position": "absolute",
-        "margin-top": "auto",
+        # "margin-top": "auto",
         "position": "fixed",
         "bottom": "0",
         "width": "100%",
@@ -199,6 +199,9 @@ footer = html.Footer(
         "border-top": "1px solid white",
         "z-index": "1100",
         "text-align": "right",
+        "display": "flex",
+        "flex-direction": "column",
+        "justify-content": "space-between",
     },
     id="footer",
 )
