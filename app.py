@@ -160,9 +160,7 @@ navbar = (
     ),
 )
 
-content = html.Div(
-    id="content", style={"margin-top": "var(--nav-height)", "overflow-y": "hidden"}
-)
+content = html.Div(id="content", style={"margin-top": "var(--nav-height)"})
 
 footer = html.Footer(
     [
