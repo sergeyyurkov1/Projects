@@ -329,15 +329,28 @@ _404 = html.Div(
 @callback(
     Output("content", "children"),
     Output("nvb", "children"),
+    Output("content", "style"),
     Input("url", "pathname"),
 )
 def render_page_content(pathname):
     if pathname == "/adsb_tracker":
-        return adsb_tracker.layout, adsb_tracker.TITLE
+        return (
+            adsb_tracker.layout,
+            adsb_tracker.TITLE,
+            {"margin-top": "var(--nav-height)"},
+        )
     elif pathname == "/drawing_for_two":
-        return drawing_for_two.layout, drawing_for_two.TITLE
+        return (
+            drawing_for_two.layout,
+            drawing_for_two.TITLE,
+            {"margin-top": "var(--nav-height)", "overflow-y": "hidden"},
+        )
     elif pathname == "/":
-        return _home, "Projects"
+        return (
+            _home,
+            "Projects",
+            {"margin-top": "var(--nav-height)"},
+        )
     return _404, ""
 
 
