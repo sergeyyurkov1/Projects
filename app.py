@@ -291,7 +291,7 @@ _home = (
                             get_card(
                                 src="assets/images/03.jpg",
                                 title="Drawing for Two",
-                                desc="A drawing app for two or three... maybe even four",
+                                desc="A shared drawing app for two... maybe even three",
                                 href="https://sy-static-st.herokuapp.com/drawing_for_two",
                                 sc_href="/",
                                 sc_disabled=True,
