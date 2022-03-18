@@ -3,7 +3,7 @@ import dash_bootstrap_components as dbc
 
 # import grasia_dash_components as gdc
 
-from apps import adsb_tracker
+from apps import adsb_tracker, drawing_for_two
 
 external_scripts = ["https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"]
 
@@ -160,7 +160,9 @@ navbar = (
     ),
 )
 
-content = html.Div(id="content", style={"margin-top": "var(--nav-height)"})
+content = html.Div(
+    id="content", style={"margin-top": "var(--nav-height)", "overflow-y": "hidden"}
+)
 
 footer = html.Footer(
     [
@@ -292,7 +294,8 @@ _home = (
                                 src="assets/images/03.jpg",
                                 title="Drawing for Two",
                                 desc="A shared drawing app for two... maybe even three",
-                                href="https://sy-static-st.herokuapp.com/drawing_for_two",
+                                # href="https://sy-static-st.herokuapp.com/drawing_for_two",
+                                href="/drawing_for_two",
                                 sc_href="/",
                                 sc_disabled=True,
                             ),
@@ -333,6 +336,8 @@ _404 = html.Div(
 def render_page_content(pathname):
     if pathname == "/adsb_tracker":
         return adsb_tracker.layout, adsb_tracker.TITLE
+    elif pathname == "/drawing_for_two":
+        return drawing_for_two.layout, drawing_for_two.TITLE
     elif pathname == "/":
         return _home, "Projects"
     return _404, ""

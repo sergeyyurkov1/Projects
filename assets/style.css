@@ -114,3 +114,15 @@ body {
         display: none;
     }
 }
+
+iframe {
+    width: 100%;
+    /* height: 100%; */
+    height: calc(var(--app-height) - var(--nav-height));
+    /* top: calc(64px + 62px); */
+    /* left: calc(100vw - 12px); */
+}
+
+#content {
+    height: calc(var(--app-height) - var(--nav-height));
+}
