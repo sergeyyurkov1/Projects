@@ -326,6 +326,26 @@ _404 = html.Div(
 )
 
 
+def ping(hosts):
+    # import platform
+    # import subprocess
+    import requests
+
+    for host in hosts:
+        #     param = "-n" if platform.system().lower() == "windows" else "-c"
+        #     command = ["ping", param, "1", host]
+
+        #     subprocess.call(command)
+
+        try:
+            r = requests.get(host, verify=False, timeout=1)
+            # print(r.status_code)
+        except requests.exceptions.ReadTimeout:
+            print(f"{host} timed out!")
+
+    print("Ping finished!")
+
+
 @callback(
     Output("content", "children"),
     Output("nvb", "children"),
@@ -333,6 +353,17 @@ _404 = html.Div(
     Input("url", "pathname"),
 )
 def render_page_content(pathname):
+    from threading import Thread
+
+    hosts = [
+        "https://sy-static-st.herokuapp.com/",
+        "https://sy-projects-st.herokuapp.com/",
+        "https://aircraft-api.herokuapp.com/",
+        "https://adsb-tracker.herokuapp.com/",
+    ]
+    thread = Thread(target=ping, args=(hosts,))
+    thread.start()
+
     if pathname == "/adsb_tracker":
         return (
             adsb_tracker.layout,
