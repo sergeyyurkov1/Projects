@@ -346,6 +346,16 @@ def ping(hosts):
     print("Ping finished!")
 
 
+def run_once(func):
+    def wrapper(*args, **kwargs):
+        if not wrapper.has_run:
+            wrapper.has_run = True
+            return func(*args, **kwargs)
+
+    wrapper.has_run = False
+    return wrapper
+
+
 @callback(
     Output("content", "children"),
     Output("nvb", "children"),
@@ -353,17 +363,20 @@ def ping(hosts):
     Input("url", "pathname"),
 )
 def render_page_content(pathname):
-    from threading import Thread
+    @run_once
+    def ping_worker():
+        from threading import Thread
 
-    hosts = [
-        "https://sy-static-st.herokuapp.com/",
-        "https://sy-projects-st.herokuapp.com/",
-        "https://aircraft-api.herokuapp.com/",
-        "https://adsb-tracker.herokuapp.com/",
-    ]
-    thread = Thread(target=ping, args=(hosts,))
-    thread.start()
+        hosts = [
+            "https://sy-static-st.herokuapp.com/",
+            "https://sy-projects-st.herokuapp.com/",
+            "https://aircraft-api.herokuapp.com/",
+            "https://adsb-tracker.herokuapp.com/",
+        ]
+        thread = Thread(target=ping, args=(hosts,))
+        thread.start()
 
+    ping_worker()
     if pathname == "/adsb_tracker":
         return (
             adsb_tracker.layout,
