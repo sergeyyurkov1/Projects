@@ -62,10 +62,14 @@ def get_states(bounds: list) -> list:
 
 
 def get_aircraft_data(id: str) -> dict:
-    url = f"https://aircraft-api.herokuapp.com/api/v1/data?id={id}"
+    import os
+    API_KEY = os.environ["API_KEY"]
+    API_KEY_NAME = "Authorization"
+    
+    url = f"https://sy-apis.herokuapp.com/adsb/v1/flight/{id}"
     url = url.replace(" ", "%20")
 
-    response = requests.get(url)
+    response = requests.get(url, headers={API_KEY_NAME: API_KEY})
 
     if response.status_code != 200:
         return False
