@@ -305,6 +305,14 @@ _home = (
                                 sc_href="",
                                 sc_disabled=True,
                             ),
+                            get_card(
+                                src="assets/images/06.jpg",
+                                title="Telegram bot",
+                                desc="A multi-tool for my internet needs",
+                                href="https://telegram.me/SAK01_bot",
+                                sc_href="",
+                                sc_disabled=True,
+                            ),
                         ],
                         justify="center",
                     ),
@@ -378,8 +386,8 @@ def render_page_content(pathname):
         hosts = [
             "https://sy-static-st.herokuapp.com/",
             "https://sy-projects-st.herokuapp.com/",
-            "https://aircraft-api.herokuapp.com/",
-            "https://adsb-tracker.herokuapp.com/",
+            "https://sy-apis.herokuapp.com/",
+            "https://sy-tb.herokuapp.com/",
         ]
         thread = Thread(target=ping, args=(hosts,))
         thread.start()
