@@ -92,30 +92,30 @@ navbar = (
                                 ),
                             ]
                         ),
-                        dbc.DropdownMenuItem(
-                            [
-                                html.A(
-                                    "Bubble Pop!",
-                                    href="https://sy-projects-st.herokuapp.com/?app=Bubble+Pop%21",
-                                    className="text-light",
-                                    target="_blank",
-                                    style={
-                                        "padding-left": "10px",
-                                        "padding-right": "10px",
-                                        "textDecoration": "none",
-                                    },
-                                ),
-                                html.A(
-                                    html.I(className="bi bi-github"),
-                                    href="https://github.com/sergeyyurkov1/sy-static-st/tree/main/static/bubble_pop",
-                                    target="_blank",
-                                    className="text-light",
-                                    style={
-                                        "textDecoration": "none",
-                                    },
-                                ),
-                            ]
-                        ),
+                        #dbc.DropdownMenuItem(
+                            #[
+                                #html.A(
+                                    #"Bubble Pop!",
+                                    #href="https://sy-projects-st.herokuapp.com/?app=Bubble+Pop%21",
+                                    #className="text-light",
+                                    #target="_blank",
+                                    #style={
+                                        #"padding-left": "10px",
+                                        #"padding-right": "10px",
+                                        #"textDecoration": "none",
+                                    #},
+                                #),
+                                #html.A(
+                                    #html.I(className="bi bi-github"),
+                                    #href="https://github.com/sergeyyurkov1/sy-static-st/tree/main/static/bubble_pop",
+                                    #target="_blank",
+                                    #className="text-light",
+                                    #style={
+                                        #"textDecoration": "none",
+                                    #},
+                                #),
+                            #]
+                        #),
                         dbc.DropdownMenuItem(
                             [
                                 html.A(
@@ -312,6 +312,14 @@ _home = (
                                 href="https://telegram.me/SAK01_bot",
                                 sc_href="",
                                 sc_disabled=True,
+                            ),
+                            get_card(
+                                src="assets/images/04.jpg",
+                                title="Bubble Pop!",
+                                desc="Pop some bubbles but watch out for pesky donuts!",
+                                href="https://sy-static-st.herokuapp.com/bubble_pop",
+                                sc_href="https://github.com/sergeyyurkov1/sy-static-st/tree/main/static/bubble_pop",
+                                sc_disabled=False,
                             ),
                         ],
                         justify="center",
